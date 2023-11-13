@@ -6,6 +6,7 @@ on:
       - main
     paths-ignore:
       - 'ip.txt'
+      - 'best-ip.txt'
   schedule:
     - cron: '*/10 * * * *'  # 每十分钟运行一次
 
