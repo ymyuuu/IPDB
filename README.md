@@ -1,8 +1,8 @@
 # Proxy-IP-library
 
-[Preview](https://proxy-ip.030101.xyz/) 
+[Preview(预览)](https://proxy-ip.030101.xyz/) 
 
-[Download](https://proxy-ip.030101.xyz/txt) 
+[Download(下载)](https://proxy-ip.030101.xyz/txt) 
 
 
 ## 免责声明
