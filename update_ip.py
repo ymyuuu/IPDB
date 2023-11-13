@@ -18,7 +18,7 @@ token = os.environ.get("ME_GITHUB_TOKEN", "")  # 从GitHub Secrets获取token
 start_time = datetime.now() + timedelta(hours=8)
 
 # 输出开始时间
-start_time_str = start_time.strftime('%Y-%m-%d %H:%M')
+start_time_str = start_time.strftime('%Y-%m-%d %H:%M:%S')
 print(f"\n{start_time_str} 正在下载更新反代IP库\n")
 
 # 下载ZIP文件
