@@ -1,8 +1,8 @@
 # Proxy-IP-library
 
-点击 [这里](https://proxy-ip.030101.xyz/) 预览代理IP列表。
+[Preview](https://proxy-ip.030101.xyz/) 
 
-点击 [这里](https://proxy-ip.030101.xyz/txt) 下载代理IP列表。
+[Download](https://proxy-ip.030101.xyz/txt) 
 
 
 ## 免责声明
