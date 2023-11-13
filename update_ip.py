@@ -2,7 +2,7 @@ import os
 import requests
 import zipfile
 import base64
-from datetime import datetime
+from datetime import datetime, timedelta
 
 # 定义下载URL和文件名
 download_url = os.environ.get("DOWNLOAD_URL", "")  # 从GitHub Secrets获取download_url
@@ -14,8 +14,8 @@ username = "ymyuuu"
 repo_name = "Proxy-IP-library"
 token = os.environ.get("ME_GITHUB_TOKEN", "")  # 从GitHub Secrets获取token
 
-# 记录脚本运行的时间
-start_time = datetime.now()
+# 记录脚本运行的时间（北京时间）
+start_time = datetime.now() + timedelta(hours=8)
 
 # 输出开始时间
 start_time_str = start_time.strftime('%Y-%m-%d %H:%M')
