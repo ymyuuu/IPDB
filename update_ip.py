@@ -84,8 +84,9 @@ try:
     upload_url = f"https://api.github.com/repos/{username}/{repo_name}/contents/ip.txt"
 
     # 构建请求体，包括SHA
+    current_time_str = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     data = {
-        "message": "Update ip.txt",
+        "message": f"Update ip.txt - {current_time_str}",
         "content": ip_txt_content_base64,
         "sha": current_sha,  # 提供当前文件的SHA值
     }
