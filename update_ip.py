@@ -97,6 +97,6 @@ try:
     # 检查上传结果
 if response.status_code == 200:
     current_time_str = (datetime.now() + timedelta(hours=8)).strftime('%Y-%m-%d %H:%M:%S')
-    print(f" {current_time_str} Successfully updated ip.txt file to GitHub!)")
+    print(f"{current_time_str} Successfully updated ip.txt file to GitHub!")
 else:
     print(f"文件上传失败，HTTP状态码: {response.status_code}, 错误信息: {response.text}")
