@@ -1,6 +1,6 @@
 # Proxy-IP-library
 
-请在使用本[自动更新IP库]([ip.txt](https://raw.githubusercontent.com/ymyuuu/Proxy-IP-library/main/ip.txt))之前仔细阅读以下免责声明。通过使用或下载本脚本，即表示您同意并接受以下条款：
+请在使用本[自动更新IP库](https://raw.githubusercontent.com/ymyuuu/Proxy-IP-library/main/ip.txt)之前仔细阅读以下免责声明。通过使用或下载本脚本，即表示您同意并接受以下条款：
 
 ## 免责声明
 
