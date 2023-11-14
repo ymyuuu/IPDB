@@ -32,4 +32,4 @@ jobs:
       env:
         ME_GITHUB_TOKEN: ${{ secrets.ME_GITHUB_TOKEN }}
         DOWNLOAD_URL: ${{ secrets.DOWNLOAD_URL }}
-      run: python .github/update_ip.py
+      run: python .github/workflows/update_ip.py
