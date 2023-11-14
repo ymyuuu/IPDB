@@ -8,7 +8,7 @@ on:
       - 'ip.txt'
       - 'best-ip.txt'
   schedule:
-    - cron: '*/10 * * * *'  # 每十分钟运行一次
+    - cron: '*/30 * * * *'  # 每十分钟运行一次
 
 jobs:
   update_ip:
