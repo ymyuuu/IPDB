@@ -3,8 +3,8 @@ import requests
 
 # 从 GitHub Secrets 中获取 API URL 和其他敏感信息
 api_url = os.environ.get('API_URL')
-api_token = os.environ.get('CLOUDFLARE_API_TOKEN')
-zone_id = os.environ.get('ZONE_ID')
+api_token = os.environ.get('xyzCLOUDFLARE_API_TOKEN')
+zone_id = os.environ.get('xyzZONE_ID')
 telegram_bot_token = os.environ.get('TELEGRAM_BOT_TOKEN')
 telegram_chat_id = os.environ.get('TELEGRAM_CHAT_ID')
 use_telegram_notification = True  # 设置为True以启用Telegram通知，设置为False以禁用
