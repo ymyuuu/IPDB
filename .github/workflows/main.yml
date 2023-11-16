@@ -1,4 +1,4 @@
-name: Update proxy IP
+name: main
 
 on:
   push:
