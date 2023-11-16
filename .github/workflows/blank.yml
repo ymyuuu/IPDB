@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-    paths:
+    paths-ignore:
       - 'ip.txt'
       - 'best-ip.txt'
   schedule:
