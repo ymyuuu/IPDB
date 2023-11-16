@@ -4,9 +4,8 @@ on:
   push:
     branches:
       - main
-    paths:
-      - '.github/workflows/gay.yml'
-      - '.github/workflows/gay.py'
+    paths-ignore:
+      - 'ip.txt'
 
 jobs:
   update_dns:
