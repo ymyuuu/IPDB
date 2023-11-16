@@ -4,12 +4,9 @@ on:
   push:
     branches:
       - main
-    paths-ignore:
-      - 'ip.txt'
-      - 'gay.yml'
-      - 'gay.py'
-      - 'blank.yml'
-      - 'update_ip.py'
+    paths:
+      - 'best-ip.txt'
+
 
 jobs:
   update_dns:
