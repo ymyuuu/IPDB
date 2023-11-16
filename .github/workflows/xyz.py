@@ -46,7 +46,7 @@ if response.status_code == 200:
             delete_url = f"{base_url}/{record['id']}"
             response = requests.delete(delete_url, headers=headers)
             if response.status_code != 200:
-                send_telegram_notification(f"删除'A'记录时出错，HTTP响应代码：{response.status_code}")
+                send_telegram_notification(f"XYZ删除'A'记录时出错，HTTP响应代码：{response.status_code}")
                 print("XYZ删除'A'记录时出错，HTTP响应代码：", response.status_code)
                 exit()  # 增加停止程序的语句
     print("已删除所有DNS 'A'记录")
