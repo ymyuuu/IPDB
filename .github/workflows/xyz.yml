@@ -5,8 +5,7 @@ on:
     branches:
       - main
     paths-ignore:
-      - 'best-ip.txt'
-
+      - 'ip.txt'
 
 jobs:
   update_dns:
