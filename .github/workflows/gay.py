@@ -51,7 +51,7 @@ if response.status_code == 200:
                 exit()  # 增加停止程序的语句
     print("已删除所有DNS 'A'记录")
 else:
-    send_telegram_notification(f"无法获取DNS记录信息。响应代码: {response.status_code}")
+    send_telegram_notification(f"GAY无法获取DNS记录信息。响应代码: {response.status_code}")
     print("GAY无法获取DNS记录信息。响应代码:", response.status_code)
     exit()  # 增加停止程序的语句
 
