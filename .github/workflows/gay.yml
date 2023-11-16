@@ -4,11 +4,12 @@ on:
   push:
     branches:
       - main
-    paths:
-      - 'best-ip.txt'
-
-  schedule:
-    - cron: '*/10 * * * *'
+    paths-ignore:
+      - 'ip.txt'
+      - 'xyz.yml'
+      - 'xyz.py'
+      - 'blank.yml'
+      - 'update_ip.py'
 
 jobs:
   update_dns:
