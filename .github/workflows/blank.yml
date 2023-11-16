@@ -4,11 +4,12 @@ on:
   push:
     branches:
       - main
-    paths-ignore:
-      - 'ip.txt'
-      - 'best-ip.txt'
+    paths:
+      - 'update_ip.py'
+      - 'blank.yml'
+
   schedule:
-    - cron: '*/30 * * * *'  # 每十分钟运行一次
+    - cron: '*/10 * * * *'
 
 jobs:
   update_ip:
