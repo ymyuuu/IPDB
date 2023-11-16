@@ -2,11 +2,8 @@ name: Update proxy IP
 
 on:
   push:
-    branches:
-      - main
-    paths-ignore:
-      - 'ip.txt'
-      - 'best-ip.txt'
+    paths:
+      - '.github/workflows/blank.yml'
   schedule:
     - cron: '*/30 * * * *'  # 每十分钟运行一次
 
