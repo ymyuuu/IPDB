@@ -5,7 +5,8 @@ on:
     branches:
       - main
     paths:
-      - 'best-ip.txt'
+      - '.github/workflows/xyz.yml'
+      - '.github/workflows/xyz.py'
 
 
 jobs:
