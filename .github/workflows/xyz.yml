@@ -2,9 +2,9 @@ name: Dns-xyz
 
 on:
   push:
-    paths:
-      - '.github/workflows/xyz.yml'
-      - '.github/workflows/xyz.py'
+    branches:
+      - main
+    paths-ignore:
       - 'best-ip.txt'
 
 
