@@ -27,8 +27,8 @@ jobs:
     - name: Run Python script
       run: python .github/workflows/xyz.py
       env:
-        CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-        ZONE_ID: ${{ secrets.ZONE_ID }}
+        xyzCLOUDFLARE_API_TOKEN: ${{ secrets.xyzCLOUDFLARE_API_TOKEN }}
+        xyzZONE_ID: ${{ secrets.xyzZONE_ID }}
         TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
         TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         API_URL: ${{ secrets.API_URL }}
