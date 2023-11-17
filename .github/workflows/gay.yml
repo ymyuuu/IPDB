@@ -24,7 +24,7 @@ jobs:
       run: pip install requests
 
     - name: Run Python script
-      run: python .github/workflows/xyz.py
+      run: python .github/workflows/gay.py
       env:
         xyzCLOUDFLARE_API_TOKEN: ${{ secrets.gayCLOUDFLARE_API_TOKEN }}
         xyzZONE_ID: ${{ secrets.gayZONE_ID }}
