@@ -80,7 +80,7 @@ if response.status_code == 200:
             "type": "A",
             "name": "cf",
             "content": ip_address,
-            "ttl": 600,
+            "ttl": 60,
             "proxied": False
         }
 
