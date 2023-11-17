@@ -3,15 +3,27 @@ import requests
 
 # 从 GitHub Secrets 中获取 API URL 和其他敏感信息
 api_url = os.environ.get('API_URL')
-api_token = os.environ.get('xyzCLOUDFLARE_API_TOKEN')
-zone_id = os.environ.get('xyzZONE_ID')
+api_token = os.environ.get('XYZCLOUDFLARE_API_TOKEN')
+zone_id = os.environ.get('XYZZONE_ID')
 telegram_bot_token = os.environ.get('TELEGRAM_BOT_TOKEN')
 telegram_chat_id = os.environ.get('TELEGRAM_CHAT_ID')
 use_telegram_notification = True  # 设置为True以启用Telegram通知，设置为False以禁用
 
 # 检查是否成功获取敏感信息
-if not (api_url and api_token and zone_id and telegram_bot_token and telegram_chat_id):
-    print("XYZ未能获取所有敏感信息。请确保环境变量已正确配置。")
+if not (api_url and api_token and zone_id):
+    print("XYZ以下环境变量缺失:")
+    if not api_url:
+        print("API_URL")
+    if not api_token:
+        print("XYZCLOUDFLARE_API_TOKEN")
+    if not zone_id:
+        print("XYZZONE_ID")
+    if use_telegram_notification and not (telegram_bot_token and telegram_chat_id):
+        if not telegram_bot_token:
+            print("TELEGRAM_BOT_TOKEN")
+        if not telegram_chat_id:
+            print("TELEGRAM_CHAT_ID")
+    print("请确保XYZ环境变量已正确配置。")
     exit()
 
 # DNS记录基本URL
@@ -46,14 +58,14 @@ if response.status_code == 200:
             delete_url = f"{base_url}/{record['id']}"
             response = requests.delete(delete_url, headers=headers)
             if response.status_code != 200:
-                send_telegram_notification(f"XYZ删除'A'记录时出错，HTTP响应代码：{response.status_code}")
+                send_telegram_notification(f"删除'A'记录时出错，HTTP响应代码：{response.status_code}")
                 print("XYZ删除'A'记录时出错，HTTP响应代码：", response.status_code)
-                exit()  # 增加停止程序的语句
+                exit()
     print("已删除所有DNS 'A'记录")
 else:
-    send_telegram_notification(f"无法获取DNS记录信息。响应代码: {response.status_code}")
+    send_telegram_notification(f"XYZ无法获取DNS记录信息。响应代码: {response.status_code}")
     print("XYZ无法获取DNS记录信息。响应代码:", response.status_code)
-    exit()  # 增加停止程序的语句
+    exit()
 
 # 发送GET请求到API获取反代IP
 print("\n正在获取反代IP并DNS推送\n")
@@ -66,7 +78,7 @@ if response.status_code == 200:
     for ip_address in ip_addresses:
         dns_record = {
             "type": "A",
-            "name": "ip",
+            "name": "cf",
             "content": ip_address,
             "ttl": 600,
             "proxied": False
@@ -78,10 +90,10 @@ if response.status_code == 200:
         if response.status_code != 200:
             send_telegram_notification(f"XYZ创建DNS记录时出错，HTTP响应代码：{response.status_code}")
             print(f"XYZ创建DNS记录时出错，HTTP响应代码：{response.status_code}")
-            exit()  # 增加停止程序的语句
+            exit()
         else:
-            print(f"Successfully updated (IPv4),{ip_address}")
+            print(f"Successfully updated,{ip_address}")
 else:
     send_telegram_notification(f"XYZ无法获取反代IP地址信息。响应代码: {response.status_code}")
     print("XYZ无法获取反代IP地址信息。响应代码:", response.status_code)
-    exit()  # 增加停止程序的语句
+    exit()
