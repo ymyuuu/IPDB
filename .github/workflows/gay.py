@@ -3,8 +3,8 @@ import requests
 
 # 从 GitHub Secrets 中获取 API URL 和其他敏感信息
 api_url = os.environ.get('API_URL')
-api_token = os.environ.get('gayCLOUDFLARE_API_TOKEN')
-zone_id = os.environ.get('gayZONE_ID')
+api_token = os.environ.get('GAYCLOUDFLARE_API_TOKEN')
+zone_id = os.environ.get('GAYZONE_ID')
 telegram_bot_token = os.environ.get('TELEGRAM_BOT_TOKEN')
 telegram_chat_id = os.environ.get('TELEGRAM_CHAT_ID')
 use_telegram_notification = True  # 设置为True以启用Telegram通知，设置为False以禁用
@@ -15,9 +15,9 @@ if not (api_url and api_token and zone_id and telegram_bot_token and telegram_ch
     if not api_url:
         print("API_URL")
     if not api_token:
-        print("gayCLOUDFLARE_API_TOKEN")
+        print("GAYCLOUDFLARE_API_TOKEN")
     if not zone_id:
-        print("gayZONE_ID")
+        print("GAYZONE_ID")
     if not telegram_bot_token:
         print("TELEGRAM_BOT_TOKEN")
     if not telegram_chat_id:
