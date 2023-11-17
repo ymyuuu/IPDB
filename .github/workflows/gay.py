@@ -10,7 +10,7 @@ telegram_chat_id = os.environ.get('TELEGRAM_CHAT_ID')
 use_telegram_notification = True  # 设置为True以启用Telegram通知，设置为False以禁用
 
 # 检查是否成功获取敏感信息
-if not (api_url and api_token and zone_id and telegram_bot_token and telegram_chat_id):
+if not (api_url and api_token and zone_id):
     print("以下环境变量缺失:")
     if not api_url:
         print("API_URL")
@@ -18,10 +18,11 @@ if not (api_url and api_token and zone_id and telegram_bot_token and telegram_ch
         print("GAYCLOUDFLARE_API_TOKEN")
     if not zone_id:
         print("GAYZONE_ID")
-    if not telegram_bot_token:
-        print("TELEGRAM_BOT_TOKEN")
-    if not telegram_chat_id:
-        print("TELEGRAM_CHAT_ID")
+    if use_telegram_notification and not (telegram_bot_token and telegram_chat_id):
+        if not telegram_bot_token:
+            print("TELEGRAM_BOT_TOKEN")
+        if not telegram_chat_id:
+            print("TELEGRAM_CHAT_ID")
     print("请确保环境变量已正确配置。")
     exit()
 
