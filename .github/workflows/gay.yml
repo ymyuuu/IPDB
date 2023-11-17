@@ -8,7 +8,7 @@ on:
       - 'ip.txt'
 
 jobs:
-  update_dns:
+  Dns-GAY:
     runs-on: ubuntu-latest
 
     steps:
