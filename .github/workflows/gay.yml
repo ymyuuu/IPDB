@@ -1,4 +1,4 @@
-name: Dns-gay
+name: Dns-GAY
 
 on:
   push:
@@ -26,8 +26,8 @@ jobs:
     - name: Run Python script
       run: python .github/workflows/gay.py
       env:
-        xyzCLOUDFLARE_API_TOKEN: ${{ secrets.gayCLOUDFLARE_API_TOKEN }}
-        xyzZONE_ID: ${{ secrets.gayZONE_ID }}
+        GAYCLOUDFLARE_API_TOKEN: ${{ secrets.GAYCLOUDFLARE_API_TOKEN }}
+        GAYZONE_ID: ${{ secrets.GAYZONE_ID }}
         TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
         TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         API_URL: ${{ secrets.API_URL }}
