@@ -11,7 +11,7 @@ use_telegram_notification = True  # 设置为True以启用Telegram通知，设�
 
 # 检查是否成功获取敏感信息
 if not (api_url and api_token and zone_id):
-    print("以下环境变量缺失:")
+    print("GAY以下环境变量缺失:")
     if not api_url:
         print("API_URL")
     if not api_token:
@@ -23,7 +23,7 @@ if not (api_url and api_token and zone_id):
             print("TELEGRAM_BOT_TOKEN")
         if not telegram_chat_id:
             print("TELEGRAM_CHAT_ID")
-    print("请确保环境变量已正确配置。")
+    print("请确保GAY环境变量已正确配置。")
     exit()
 
 # DNS记录基本URL
@@ -88,11 +88,11 @@ if response.status_code == 200:
         response = requests.post(base_url, headers=headers, json=dns_record)
 
         if response.status_code != 200:
-            send_telegram_notification(f"XYZ创建DNS记录时出错，HTTP响应代码：{response.status_code}")
+            send_telegram_notification(f"GAY创建DNS记录时出错，HTTP响应代码：{response.status_code}")
             print(f"GAY创建DNS记录时出错，HTTP响应代码：{response.status_code}")
             exit()
         else:
-            print(f"Successfully updated (IPv4),{ip_address}")
+            print(f"Successfully updated,{ip_address}")
 else:
     send_telegram_notification(f"GAY无法获取反代IP地址信息。响应代码: {response.status_code}")
     print("GAY无法获取反代IP地址信息。响应代码:", response.status_code)
