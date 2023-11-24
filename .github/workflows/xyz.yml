@@ -1,11 +1,7 @@
 name: Dns-XYZ
 
 on:
-  push:
-    branches:
-      - main
-    paths-ignore:
-      - 'ip.txt'
+  workflow_dispatch:
 
 jobs:
   Dns-XYZ:
