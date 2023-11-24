@@ -1,0 +1,33 @@
+name: Dns-YMY
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - 'ip.txt'
+
+jobs:
+  Dns-YMY:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: 3.x  # 使用你想要的 Python 版本
+
+    - name: Install dependencies
+      run: pip install requests
+
+    - name: Run Python script
+      run: python .github/workflows/ymy.py
+      env:
+        YMYCLOUDFLARE_API_TOKEN: ${{ secrets.YMYCLOUDFLARE_API_TOKEN }}
+        YMYZONE_ID: ${{ secrets.YMYZONE_ID }}
+        TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+        TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        API_URL: ${{ secrets.API_URL }}
