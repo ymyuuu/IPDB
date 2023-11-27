@@ -23,14 +23,28 @@ start_time_str = start_time.strftime('%Y-%m-%d %H:%M:%S')
 print(f"\n{start_time_str} 正在下载更新反代IP库\n")
 
 # 下载ZIP文件
-try:
-    response = requests.get(download_url)
-    response.raise_for_status()  # 检查是否有HTTP错误
-    with open(zip_file_name, "wb") as zip_file:
-        zip_file.write(response.content)
-except requests.exceptions.RequestException as e:
-    print(f"下载ZIP文件时出现错误: {str(e)}")
-    exit()  # 停止后续运行
+# 获取以逗号分隔的多个下载URL
+download_urls = os.environ.get("DOWNLOAD_URL", "").split(",")
+
+zip_file_name = "data.zip"
+success = False
+
+# 下载ZIP文件
+for index, url in enumerate(download_urls, start=1):
+    try:
+        response = requests.get(url.strip())
+        response.raise_for_status()  # 检查是否有HTTP错误
+        with open(zip_file_name, "wb") as zip_file:
+            zip_file.write(response.content)
+        success = True
+        break  # 成功下载则跳出循环
+    except requests.exceptions.RequestException as e:
+        print(f"第 {index} 个URL下载ZIP文件时出现错误: {str(e)}")
+        if index < len(download_urls):
+            print("正在尝试调用备用接口...")
+        else:
+            print("所有URL下载尝试失败，请检查网络或者URL设置。")
+            exit()  # 停止后续运行
 
 # 解压ZIP文件
 if response:
