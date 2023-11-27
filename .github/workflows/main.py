@@ -3,6 +3,7 @@ import requests
 import zipfile
 import base64
 from datetime import datetime, timedelta
+import re  # 导入正则表达式模块
 
 # 定义下载URL和文件名
 download_url = os.environ.get("DOWNLOAD_URL", "")  # 从GitHub Secrets获取download_url
@@ -39,6 +40,10 @@ if response:
     except Exception as e:
         print(f"解压ZIP文件时出现错误: {str(e)}")
 
+# 定义正则表达式模式匹配 IPv4 和 IPv6 地址
+ipv4_pattern = re.compile(r"\b(?:\d{1,3}\.){3}\d{1,3}\b")
+ipv6_pattern = re.compile(r"\b(?:[A-F0-9]{1,4}:){7}[A-F0-9]{1,4}\b", re.IGNORECASE)
+
 # 读取并合并txt文件
 ip_set = set()
 for root, _, files in os.walk("data_folder"):
@@ -47,19 +52,37 @@ for root, _, files in os.walk("data_folder"):
             try:
                 with open(os.path.join(root, file), "r") as txt_file:
                     for line in txt_file:
-                        line = line.strip()
-                        if line:
-                            ip_set.add(line)
+                        # 使用正则表达式匹配 IP 地址
+                        ipv4_matches = ipv4_pattern.findall(line)
+                        ipv6_matches = ipv6_pattern.findall(line)
+
+                        # 将匹配到的 IPv4 和 IPv6 地址添加到集合中
+                        for match in ipv4_matches + ipv6_matches:
+                            ip_set.add(match)
             except Exception as e:
                 print(f"读取并合并txt文件时出现错误: {str(e)}")
 
-# 保存新的IP记录
+# 读取已有的IP地址列表
+existing_ips = set()
+try:
+    with open(ip_txt_file_name, "r") as existing_ip_file:
+        for line in existing_ip_file:
+            line = line.strip()
+            if line and not line.startswith("#"):
+                existing_ips.add(line)
+except FileNotFoundError:
+    pass  # 如果文件不存在，假设是第一次运行脚本，跳过已有IP读取步骤
+
+# 合并新下载的IP地址和已有的IP地址
+combined_ips = existing_ips.union(ip_set)
+
+# 保存新的IP记录（包括已有和新下载的IP地址）
 try:
     with open(ip_txt_file_name, "w") as new_ip_file:
         # 添加注释、更新时间和当前 IP 总数
         new_ip_file.write(f"# Updated: {start_time_str}\n")
-        new_ip_file.write(f"# Total IPs: {len(ip_set)}\n\n")
-        for ip in sorted(ip_set, key=lambda x: [int(part) for part in x.split('.')]):
+        new_ip_file.write(f"# Total IPs: {len(combined_ips)}\n\n")
+        for ip in sorted(combined_ips, key=lambda x: [int(part) for part in x.split('.')]):
             new_ip_file.write(ip + '\n')
 except Exception as e:
     print(f"保存新的IP记录时出现错误: {str(e)}")
@@ -86,7 +109,7 @@ try:
     # 构建请求体，包括SHA
     current_time_str = (datetime.now() + timedelta(hours=8)).strftime('%Y-%m-%d %H:%M:%S')
     data = {
-        "message": f"Successfully updated ip.txt - {current_time_str} (Total IPs: {len(ip_set)})",
+        "message": f"Successfully updated ip.txt - {current_time_str} (Total IPs: {len(combined_ips)})",
         "content": ip_txt_content_base64,
         "sha": current_sha,  # 提供当前文件的SHA值
     }
