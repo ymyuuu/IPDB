@@ -22,7 +22,6 @@ start_time = datetime.now() + timedelta(hours=8)
 start_time_str = start_time.strftime('%Y-%m-%d %H:%M:%S')
 print(f"\n{start_time_str} 正在下载更新反代IP库\n")
 
-# 下载ZIP文件
 # 获取以逗号分隔的多个下载URL
 download_urls = os.environ.get("DOWNLOAD_URL", "").split(",")
 
@@ -32,7 +31,8 @@ success = False
 # 下载ZIP文件
 for index, url in enumerate(download_urls, start=1):
     try:
-        response = requests.get(url.strip())
+        url = url.strip()
+        response = requests.get(url)
         response.raise_for_status()  # 检查是否有HTTP错误
         with open(zip_file_name, "wb") as zip_file:
             zip_file.write(response.content)
