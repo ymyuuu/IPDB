@@ -27,9 +27,9 @@ try:
     response.raise_for_status()  # 检查是否有HTTP错误
     with open(zip_file_name, "wb") as zip_file:
         zip_file.write(response.content)
-except Exception as e:
+except requests.exceptions.RequestException as e:
     print(f"下载ZIP文件时出现错误: {str(e)}")
-    response = None
+    exit()  # 停止后续运行
 
 # 解压ZIP文件
 if response:
