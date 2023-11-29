@@ -8,7 +8,7 @@ from datetime import datetime, timedelta
 script_dir = os.path.dirname(os.path.abspath(__file__))
 os.chdir(script_dir)
 
-download_url = os.environ.get("API", "")
+download_url = os.environ.get("UpgradeIPDatabaseAPI", "")
 zip_file_name = "data.zip"
 ip_txt_file_name = "ip.txt"
 
