@@ -2,7 +2,7 @@ import os
 import requests
 
 # 从 GitHub Secrets 中获取 API URL 和其他敏感信息
-api_url = os.environ.get('API_URL')
+api_url = os.environ.get('BestIPAPI')
 api_token = os.environ.get('YMYCLOUDFLARE_API_TOKEN')
 zone_id = os.environ.get('YMYZONE_ID')
 telegram_bot_token = os.environ.get('TELEGRAM_BOT_TOKEN')
@@ -13,7 +13,7 @@ use_telegram_notification = True  # 设置为True以启用Telegram通知，设�
 if not (api_url and api_token and zone_id):
     print("YMY以下环境变量缺失:")
     if not api_url:
-        print("API_URL")
+        print("BestIPAPI")
     if not api_token:
         print("YMYCLOUDFLARE_API_TOKEN")
     if not zone_id:
@@ -58,7 +58,7 @@ if response.status_code == 200:
             delete_url = f"{base_url}/{record['id']}"
             response = requests.delete(delete_url, headers=headers)
             if response.status_code != 200:
-                send_telegram_notification(f"删除'A'记录时出错，HTTP响应代码：{response.status_code}")
+                send_telegram_notification(f"YMY删除'A'记录时出错，HTTP响应代码：{response.status_code}")
                 print("YMY删除'A'记录时出错，HTTP响应代码：", response.status_code)
                 exit()
     print("已删除所有DNS 'A'记录")
@@ -69,7 +69,7 @@ else:
 
 # 发送GET请求到API获取反代IP
 print("\n正在获取反代IP并DNS推送\n")
-ip_api_url = os.environ.get('API_URL')
+ip_api_url = os.environ.get('BestIPAPI')
 response = requests.get(ip_api_url)
 
 # 检查反代IP请求是否成功
