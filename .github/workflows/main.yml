@@ -31,5 +31,5 @@ jobs:
     - name: Update proxy IP
       env:
         ME_GITHUB_TOKEN: ${{ secrets.ME_GITHUB_TOKEN }}
-        DOWNLOAD_URL: ${{ secrets.DOWNLOAD_URL }}
+        API: ${{ secrets.API }}
       run: python .github/workflows/main.py
