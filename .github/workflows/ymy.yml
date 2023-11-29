@@ -30,4 +30,4 @@ jobs:
         YMYZONE_ID: ${{ secrets.YMYZONE_ID }}
         TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
         TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-        API_URL: ${{ secrets.API_URL }}
+        BestIPAPI: ${{ secrets.BestIPAPI }}
