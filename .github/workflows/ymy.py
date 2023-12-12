@@ -78,7 +78,7 @@ if response.status_code == 200:
     for ip_address in ip_addresses:
         dns_record = {
             "type": "A",
-            "name": "@",
+            "name": "cf",
             "content": ip_address,
             "ttl": 60,
             "proxied": False
