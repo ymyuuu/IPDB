@@ -4,7 +4,7 @@
 
 欢迎使用 IPDB API，这是一个用于获取不同类型 IP 地址信息的简单而强大的接口。通过 IPDB API，您可以获取来自不同服务提供商的 IPv4 和 IPv6 地址信息，以及代理 IP 地址列表。
 
-**API 地址：** [https://ipdb.030101.xyz](https://ipdb.030101.xyz)
+**API 地址：** [https://ipdb.api.030101.xyz](https://ipdb.api.030101.xyz)
 
 ### 交流群和通知频道
 
@@ -34,16 +34,16 @@
 
 ### 请求示例
 
-- [https://ipdb.030101.xyz/?type=proxy](https://ipdb.030101.xyz/?type=proxy)
+- [https://ipdb.api.030101.xyz/?type=proxy](https://ipdb.api.030101.xyz/?type=proxy)
   - *获取反代 IP 地址列表*
 
-- [https://ipdb.030101.xyz/?type=cfv4;proxy](https://ipdb.030101.xyz/?type=cfv4;proxy)
+- [https://ipdb.api.030101.xyz/?type=cfv4;proxy](https://ipdb.api.030101.xyz/?type=cfv4;proxy)
   - *获取 Cloudflare IPv4 地址列表和反代 IP 地址列表*
 
-- [https://ipdb.030101.xyz/?type=bestproxy&down=true](https://ipdb.030101.xyz/?type=bestproxy&down=true)
+- [https://ipdb.api.030101.xyz/?type=bestproxy&down=true](https://ipdb.api.030101.xyz/?type=bestproxy&down=true)
   - *下载优选反代 IP 地址列表*
 
-- [https://ipdb.030101.xyz/?type=cfv4;cfv6&down=true](https://ipdb.030101.xyz/?type=cfv4;cfv6&down=true)
+- [https://ipdb.api.030101.xyz/?type=cfv4;cfv6&down=true](https://ipdb.api.030101.xyz/?type=cfv4;cfv6&down=true)
   - *下载 Cloudflare IPv4 地址列表和 Cloudflare IPv6 地址列表*
 
 ## 免责声明
