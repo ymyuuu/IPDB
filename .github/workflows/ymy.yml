@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths-ignore:
-      - 'ip.txt'
+      - 'proxy.txt'
 
 jobs:
   Dns-YMY:
