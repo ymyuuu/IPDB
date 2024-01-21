@@ -6,8 +6,6 @@
 
 **API 地址：** [https://ipdb.api.030101.xyz](https://ipdb.api.030101.xyz)
 
-### 交流群和通知频道
-
 - 群聊: [HerosHub](https://t.me/HerosHub)
 - 频道: [HerosMsg](https://t.me/HerosMsg)
 
