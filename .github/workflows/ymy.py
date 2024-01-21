@@ -9,6 +9,10 @@ telegram_bot_token = os.environ.get('TELEGRAM_BOT_TOKEN')
 telegram_chat_id = os.environ.get('TELEGRAM_CHAT_ID')
 use_telegram_notification = True  # 设置为True以启用Telegram通知，设置为False以禁用
 
+# 输出调试信息
+print("api_url:", api_url)
+
+
 # 检查是否成功获取敏感信息
 if not (api_url and api_token and zone_id):
     print("YMY以下环境变量缺失:")
