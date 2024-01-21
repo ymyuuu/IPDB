@@ -19,7 +19,7 @@
     - `cfv4`：Cloudflare IPv4 地址列表
     - `cfv6`：Cloudflare IPv6 地址列表
     - `proxy`：反代 IP 地址列表
-    - `bestproxy`：优选反代 IP 地址列表
+    - `bestproxy`：优选反代 IP 地址列表(Half hour)
   - 示例： `type=cfv4;cfv6;proxy`
 
 - **down 参数**(可选)
