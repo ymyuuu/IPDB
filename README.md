@@ -18,7 +18,7 @@
   - 支持的类型：
     - `cfv4`：Cloudflare IPv4 地址列表
     - `cfv6`：Cloudflare IPv6 地址列表
-    - `proxy`：反代 IP 地址列表
+    - `proxy`：反代 IP 地址列表(Ten min)
     - `bestproxy`：优选反代 IP 地址列表(Half hour)
   - 示例： `type=cfv4;cfv6;proxy`
 
