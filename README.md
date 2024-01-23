@@ -6,8 +6,8 @@
 
 **API 地址：** [https://ipdb.api.030101.xyz](https://ipdb.api.030101.xyz)
 
-- 群聊: [HerosHub](https://t.me/HeroCore)
-- 频道: [HerosMsg](https://t.me/HeroMsg)
+- 群聊: [HeroCore](https://t.me/HeroCore)
+- 频道: [HeroMsg](https://t.me/HeroMsg)
 
 ## IPDB API 参数说明
 
