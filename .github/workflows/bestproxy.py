@@ -37,7 +37,7 @@ for record in data["result"]:
     if re.search(name, record_name):
         delete_dns_record(record["id"])
 
-print(f"\nSuccessfully deleted records with name {name}, updating DNS records now")
+print(f"\nSuccessfully delete records with name {name}, updating DNS records now")
 
 ipdb_response = requests.get(ipdb_api_url)
 new_ip_list = ipdb_response.text.strip().split("\n")
@@ -45,4 +45,4 @@ new_ip_list = ipdb_response.text.strip().split("\n")
 for new_ip in new_ip_list:
     create_dns_record(new_ip)
 
-print(f"\nSuccessfully updated {name} DNS records")
+print(f"\nSuccessfully update {name} DNS records")
