@@ -5,7 +5,7 @@ import re
 # Get GitHub Secrets from environment variables
 api_token = os.environ.get("CLOUDFLARE_API_TOKEN")
 zone_id = os.environ.get("CLOUDFLARE_ZONE_ID")
-name = "1"
+name = "bestcf"
 ipdb_api_url = "https://ipdb.api.030101.xyz/?type=bestproxy"
 
 headers = {
