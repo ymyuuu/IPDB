@@ -2,7 +2,7 @@ import os
 import requests
 
 # 从 GitHub Secrets 中获取 API URL 和其他敏感信息
-api_url = "https://ipdb.api.030101.xyz/?type=bestcf"
+api_url = "https://ipdb.api.030101.xyz/?type=bestproxy"
 api_token = os.environ.get('YMYCLOUDFLARE_API_TOKEN')
 zone_id = os.environ.get('YMYZONE_ID')
 
