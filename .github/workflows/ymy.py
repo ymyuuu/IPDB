@@ -24,6 +24,7 @@ def delete_records_by_name(base_url, headers, name):
             response = requests.delete(delete_url, headers=headers)
             if response.status_code != 200:
                 print(f"YMY删除记录时出错，HTTP响应代码：{response.status_code}")
+                print(response.text)  # 打印具体错误信息
                 exit(1)
     print(f"已删除所有 DNS 记录，name={name}")
 
@@ -42,6 +43,7 @@ def create_dns_records(base_url, headers, name, ip_addresses):
 
         if response.status_code != 200:
             print(f"YMY创建DNS记录时出错，HTTP响应代码：{response.status_code}")
+            print(response.text)  # 打印具体错误信息
             exit(1)
         else:
             print(f"Successfully updated, {ip_address}")
@@ -51,7 +53,7 @@ def main():
     api_token = os.environ.get('YMYCLOUDFLARE_API_TOKEN')
     zone_id = os.environ.get('YMYZONE_ID')
     dns_name = "0101"  # 设置要操作的 DNS 记录的 name
-    base_url = f"https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records"
+    base_url = f"https://proxy.api.030101.xyz/https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records"
     headers = get_api_headers(api_token)
 
     # 删除指定 "name" 的所有记录
