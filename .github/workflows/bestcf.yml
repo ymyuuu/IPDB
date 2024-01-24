@@ -1,4 +1,4 @@
-name: Cloudflare DNS Update
+name: BestCF
 
 on:
   push:
@@ -23,7 +23,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install requests
 
-    - name: Update Cloudflare DNS
+    - name: BestCF
       run: |
         python .github/workflows/bestcf.py
       env:
