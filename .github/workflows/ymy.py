@@ -4,9 +4,6 @@ api_url = "https://ipdb.api.030101.xyz/?type=cfv4"
 cloudflare_api_token = "YMYLOUDFLARE_API_TOKEN"
 zone_id = "YMYZONE_ID"
 
-int("api_url:", api_url)
-
-
 # DNS记录基本URL
 base_url = f"https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records"
 
