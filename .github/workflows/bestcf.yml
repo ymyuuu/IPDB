@@ -1,4 +1,4 @@
-name: Your Workflow Name
+name: Cloudflare DNS Update
 
 on:
   push:
@@ -6,22 +6,26 @@ on:
       - main
 
 jobs:
-  run_script:
+  update_dns:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
+    - name: Checkout Repository
+      uses: actions/checkout@v2
 
     - name: Set up Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v2
       with:
-        python-version: 3.x
+        python-version: 3.8
 
-    - name: Run Python script
+    - name: Install Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install requests
+
+    - name: Update Cloudflare DNS
+      run: |
+        python bestcf.py
       env:
         CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         CLOUDFLARE_ZONE_ID: ${{ secrets.CLOUDFLARE_ZONE_ID }}
-      run: |
-        pip install requests  # 安装依赖，如果需要的话
-        python bestcf.py
