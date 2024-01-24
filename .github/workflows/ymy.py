@@ -26,7 +26,10 @@ def delete_records_by_name(base_url, headers, name):
                 print(f"YMY删除记录时出错，HTTP响应代码：{response.status_code}")
                 print(response.text)  # 打印具体错误信息
                 exit(1)
+            else:
+                print(f"成功删除记录，name={name}, id={record['id']}")
     print(f"已删除所有 DNS 记录，name={name}")
+
 
 def create_dns_records(base_url, headers, name, ip_addresses):
     print("\n正在获取反代IP并DNS推送\n")
