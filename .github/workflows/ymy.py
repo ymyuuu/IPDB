@@ -57,7 +57,7 @@ def main():
     api_url = "https://ipdb.api.030101.xyz/?type=bestproxy"
     api_token = os.environ.get('YMYCLOUDFLARE_API_TOKEN')
     zone_id = os.environ.get('YMYZONE_ID')
-    dns_name = "your_dns_name"  # 设置要操作的 DNS 记录的 name
+    dns_name = "0101"  # 设置要操作的 DNS 记录的 name
     base_url = f"https://proxy.api.030101.xyz/https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records"
     headers = get_api_headers(api_token)
 
