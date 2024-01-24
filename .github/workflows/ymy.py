@@ -1,7 +1,7 @@
 import requests
 
 api_url = "https://ipdb.api.030101.xyz/?type=cfv4"
-cloudflare_api_token = "YMYLOUDFLARE_API_TOKEN"
+cloudflare_api_token = "YMYCLOUDFLARE_API_TOKEN"
 zone_id = "YMYZONE_ID"
 
 # DNS记录基本URL
