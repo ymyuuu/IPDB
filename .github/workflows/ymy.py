@@ -15,7 +15,7 @@ def get_dns_records(base_url, headers, name):
         print(f"YMY无法获取{name} DNS记录信息。响应代码:", response.status_code)
         exit(1)
 
-def delete_records(base_url, headers, records):
+def delete_records(base_url, headers, name, records):
     print(f"\n正在删除所有 DNS {name} 记录")
     for record in records:
         delete_url = f"{base_url}/{record['id']}"
@@ -54,7 +54,7 @@ def main():
 
     # 获取并删除所有指定"name"的记录
     records = get_dns_records(base_url, headers, name)
-    delete_records(base_url, headers, records)
+    delete_records(base_url, headers, name, records)
 
     # 发送GET请求到API获取反代IP
     response = requests.get(api_url)
