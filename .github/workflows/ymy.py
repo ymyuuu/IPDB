@@ -18,7 +18,12 @@ def get_dns_records(base_url, headers):
 def delete_records_by_name(base_url, headers, name):
     print(f"\n正在删除所有 DNS 记录，name={name}")
     records = get_dns_records(base_url, headers)
+    if not records:
+        print(f"没有找到要删除的记录，name={name}")
+        return
+
     for record in records:
+        print(f"记录详情: {record}")
         if record["name"] == name:
             delete_url = f"{base_url}/{record['id']}"
             response = requests.delete(delete_url, headers=headers)
@@ -26,10 +31,7 @@ def delete_records_by_name(base_url, headers, name):
                 print(f"YMY删除记录时出错，HTTP响应代码：{response.status_code}")
                 print(response.text)  # 打印具体错误信息
                 exit(1)
-            else:
-                print(f"成功删除记录，name={name}, id={record['id']}")
     print(f"已删除所有 DNS 记录，name={name}")
-
 
 def create_dns_records(base_url, headers, name, ip_addresses):
     print("\n正在获取反代IP并DNS推送\n")
@@ -55,7 +57,7 @@ def main():
     api_url = "https://ipdb.api.030101.xyz/?type=bestproxy"
     api_token = os.environ.get('YMYCLOUDFLARE_API_TOKEN')
     zone_id = os.environ.get('YMYZONE_ID')
-    dns_name = "0101"  # 设置要操作的 DNS 记录的 name
+    dns_name = "your_dns_name"  # 设置要操作的 DNS 记录的 name
     base_url = f"https://proxy.api.030101.xyz/https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records"
     headers = get_api_headers(api_token)
 
