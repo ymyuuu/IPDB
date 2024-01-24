@@ -25,7 +25,7 @@ jobs:
 
     - name: Update Cloudflare DNS
       run: |
-        python bestcf.py
+        python .github/workflows/bestcf.py
       env:
         CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         CLOUDFLARE_ZONE_ID: ${{ secrets.CLOUDFLARE_ZONE_ID }}
