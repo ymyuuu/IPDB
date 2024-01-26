@@ -8,7 +8,6 @@ def get_a_records(dns_domain):
     except requests.exceptions.RequestException as e:
         print(f"请求发生错误: {e}")
         return []
-print(f"\nTotal IPs:{len(unique_ips)}")
 
 dns_domains = os.environ.get("NINE", "").split(",")
 api_token = os.environ.get("CLOUDFLARE_API_TOKEN")
@@ -36,6 +35,7 @@ def create_dns_record(ip):
     requests.post(create_url, headers=headers, json=create_data)
 
 unique_ips = set()
+print(f"\nTotal IPs: {len(unique_ips)}")
 
 for dns_domain in dns_domains:
     new_ip_list = get_a_records(dns_domain)
