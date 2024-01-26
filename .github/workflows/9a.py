@@ -9,12 +9,13 @@ def get_a_records(dns_domain):
         print(f"请求发生错误: {e}")
         return []
 
-# 设置多个 DNS 域名
-dns_domains = ["south-connect.zhihuu.top", "north-connect.zhihuu.top", "us-connect.zhihuu.top", "hk-connect.zhihuu.top"]
-
-# Get GitHub Secrets from environment variables
+# 从环境变量获取多个 DNS 域名
+dns_domains = os.environ.get("NINE", "").split(",")
+# 从环境变量获取 Cloudflare API Token
 api_token = os.environ.get("CLOUDFLARE_API_TOKEN")
+# 从环境变量获取 Cloudflare Zone ID
 zone_id = os.environ.get("CLOUDFLARE_ZONE_ID")
+# 设置 DNS 记录的名称
 name = "9a"
 
 headers = {
@@ -58,7 +59,7 @@ for dns_domain in dns_domains:
         if re.search(name, record_name):
             delete_dns_record(record["id"])
 
-    print(f"\nSuccessfully delete records with name {name}, updating DNS records now")
+print(f"\nSuccessfully delete records with name {name}, updating DNS records now")
 
 # 创建新的 DNS 记录，使用去重后的 IP 地址
 for new_ip in unique_ips:
