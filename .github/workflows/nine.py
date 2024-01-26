@@ -9,13 +9,9 @@ def get_a_records(dns_domain):
         print(f"请求发生错误: {e}")
         return []
 
-# 从环境变量获取多个 DNS 域名
 dns_domains = os.environ.get("NINE", "").split(",")
-# 从环境变量获取 Cloudflare API Token
 api_token = os.environ.get("CLOUDFLARE_API_TOKEN")
-# 从环境变量获取 Cloudflare Zone ID
 zone_id = os.environ.get("CLOUDFLARE_ZONE_ID")
-# 设置 DNS 记录的名称
 name = "nine"
 
 headers = {
@@ -38,18 +34,12 @@ def create_dns_record(ip):
     }
     requests.post(create_url, headers=headers, json=create_data)
 
-# 用于存储所有唯一 IP 地址的集合
 unique_ips = set()
 
-# 针对每个 DNS 域名执行相同的操作
 for dns_domain in dns_domains:
-    # 使用新的方式获取 IP
     new_ip_list = get_a_records(dns_domain)
-
-    # 将新的 IP 地址添加到集合中
     unique_ips.update(new_ip_list)
 
-    # 删除旧的 DNS 记录
     url = f"https://proxy.api.030101.xyz/https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records"
     response = requests.get(url, headers=headers)
     data = response.json()
@@ -61,7 +51,6 @@ for dns_domain in dns_domains:
 
 print(f"\nSuccessfully delete records with name {name}, updating DNS records now")
 
-# 创建新的 DNS 记录，使用去重后的 IP 地址
 for new_ip in unique_ips:
     create_dns_record(new_ip)
 
