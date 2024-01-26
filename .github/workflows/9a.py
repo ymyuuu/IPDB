@@ -9,8 +9,8 @@ def get_a_records(dns_domain):
         print(f"请求发生错误: {e}")
         return []
 
-# 设置 DNS 域名
-dns_domain = "bestcf.ymy.gay"
+# 设置多个 DNS 域名
+dns_domains = ["south-connect.zhihuu.top", "north-connect.zhihuu.top", "us-connect.zhihuu.top", "hk-connect.zhihuu.top"]
 
 # Get GitHub Secrets from environment variables
 api_token = os.environ.get("CLOUDFLARE_API_TOKEN")
@@ -37,23 +37,31 @@ def create_dns_record(ip):
     }
     requests.post(create_url, headers=headers, json=create_data)
 
-# 使用新的方式获取 IP
-new_ip_list = get_a_records(dns_domain)
+# 用于存储所有唯一 IP 地址的集合
+unique_ips = set()
 
-# 删除旧的 DNS 记录
-url = f"https://proxy.api.030101.xyz/https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records"
-response = requests.get(url, headers=headers)
-data = response.json()
+# 针对每个 DNS 域名执行相同的操作
+for dns_domain in dns_domains:
+    # 使用新的方式获取 IP
+    new_ip_list = get_a_records(dns_domain)
 
-for record in data["result"]:
-    record_name = record["name"]
-    if re.search(name, record_name):
-        delete_dns_record(record["id"])
+    # 将新的 IP 地址添加到集合中
+    unique_ips.update(new_ip_list)
 
-print(f"\nSuccessfully delete records with name {name}, updating DNS records now")
+    # 删除旧的 DNS 记录
+    url = f"https://proxy.api.030101.xyz/https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records"
+    response = requests.get(url, headers=headers)
+    data = response.json()
 
-# 创建新的 DNS 记录
-for new_ip in new_ip_list:
+    for record in data["result"]:
+        record_name = record["name"]
+        if re.search(name, record_name):
+            delete_dns_record(record["id"])
+
+    print(f"\nSuccessfully delete records with name {name} for domain {dns_domain}, updating DNS records now")
+
+# 创建新的 DNS 记录，使用去重后的 IP 地址
+for new_ip in unique_ips:
     create_dns_record(new_ip)
 
-print(f"\nSuccessfully update {name} DNS records")
+print(f"\nSuccessfully update {name} DNS records with unique IP addresses")
