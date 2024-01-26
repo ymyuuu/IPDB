@@ -58,7 +58,7 @@ for dns_domain in dns_domains:
         if re.search(name, record_name):
             delete_dns_record(record["id"])
 
-    print(f"\nSuccessfully delete records with name {name} for domain {dns_domain}, updating DNS records now")
+    print(f"\nSuccessfully delete records with name {name}, updating DNS records now")
 
 # 创建新的 DNS 记录，使用去重后的 IP 地址
 for new_ip in unique_ips:
