@@ -4,7 +4,7 @@ import re
 
 def get_a_records(dns_domain):
     try:
-        return [record["rdata"] for record in requests.get(f"http://www.dns-lg.com/us01/{dns_domain}/a")。json().get("answer"， []) if record.get("type") == "A"]
+        return [record["rdata"] for record in requests.get(f"http://www.dns-lg.com/us01/{dns_domain}/a").json().get("answer", []) if record.get("type") == "A"]
     except requests.exceptions.RequestException as e:
         print(f"请求发生错误: {e}")
         return []
