@@ -1,4 +1,4 @@
-name: Update DNS Records
+name: NINE
 
 on:
   push:
@@ -11,10 +11,10 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
 
     - name: Set up Python
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v4
       with:
         python-version: 3.x
 
@@ -23,7 +23,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install requests
 
-    - name: Update DNS Records
+    - name: NINE
       run: |
         python .github/workflows/9a.py
       env:
