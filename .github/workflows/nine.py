@@ -35,7 +35,6 @@ def create_dns_record(ip):
     requests.post(create_url, headers=headers, json=create_data)
 
 unique_ips = set()
-print(f"\nTotal IPs: {len(unique_ips)}")
 
 for dns_domain in dns_domains:
     new_ip_list = get_a_records(dns_domain)
@@ -49,6 +48,9 @@ for dns_domain in dns_domains:
         record_name = record["name"]
         if re.search(name, record_name):
             delete_dns_record(record["id"])
+
+# Print the total number of unique IPs
+print(f"\nTotal IPs: {len(unique_ips)}")
 
 print(f"\nSuccessfully delete records with name {name}, updating DNS records now")
 
