@@ -25,7 +25,7 @@ jobs:
 
     - name: NINE
       run: |
-        python .github/workflows/9a.py
+        python .github/workflows/nine.py
       env:
         NINE: ${{ secrets.NINE }}
         CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
