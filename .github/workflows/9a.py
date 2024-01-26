@@ -16,7 +16,7 @@ api_token = os.environ.get("CLOUDFLARE_API_TOKEN")
 # 从环境变量获取 Cloudflare Zone ID
 zone_id = os.environ.get("CLOUDFLARE_ZONE_ID")
 # 设置 DNS 记录的名称
-name = "9a"
+name = "nine"
 
 headers = {
     "Authorization": f"Bearer {api_token}",
