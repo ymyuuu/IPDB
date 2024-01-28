@@ -17,19 +17,11 @@ def get_a_records(domain):
         return []
 
 def delete_dns_records(zone_id, name, headers):
-    if name == "@":
-        # 如果 name 为 "@"，则删除所有 DNS 记录
-        url = f"https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records"
-        data = requests.get(url, headers=headers).json()
+    url = f"https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records"
+    data = requests.get(url, headers=headers).json()
 
-        for record in data.get("result", []):
-            delete_dns_record(zone_id, record.get("id", ""), headers)
-    else:
-        # 如果 name 不为 "@"，则只删除特定名称的 DNS 记录
-        url = f"https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records?type=A&name={name}"
-        data = requests.get(url, headers=headers).json()
-
-        for record in data.get("result", []):
+    for record in data.get("result", []):
+        if name == "@" or re.search(name, record.get("name", "")):
             delete_dns_record(zone_id, record.get("id", ""), headers)
 
 def delete_dns_record(zone_id, record_id, headers):
@@ -40,24 +32,26 @@ def create_dns_record(zone_id, name, ip, headers):
     requests.post(f"https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records", headers=headers, json=create_data)
 
 def update_dns_records(zone_id, name, dns_domains, headers, excluded_networks):
-    unique_ips = set()
+    if name == "@":
+        delete_dns_records(zone_id, name, headers)
+    else:
+        unique_ips = set()
 
-    for dns_domain in dns_domains:
-        new_ip_list = get_a_records(dns_domain)
-        unique_ips.update(new_ip_list)
+        for dns_domain in dns_domains:
+            new_ip_list = get_a_records(dns_domain)
+            unique_ips.update(new_ip_list)
 
-    delete_dns_records(zone_id, name, headers)
+        delete_dns_records(zone_id, name, headers)
 
-    filtered_ips = list(set(ip for ip in unique_ips if not any(ip_address(ip) in ip_network(net) for net in excluded_networks)))
+        filtered_ips = list(set(ip for ip in unique_ips if not any(ip_address(ip) in ip_network(net) for net in excluded_networks)))
 
-    for ip in filtered_ips:
-        # 传递 name 参数给 create_dns_record 函数
-        create_dns_record(zone_id, name, ip, headers)
+        for ip in filtered_ips:
+            create_dns_record(zone_id, name, ip, headers)
 
-    print(f"\nUpdated DNS records, final count of unique IP addresses: {len(filtered_ips)}")
+        print(f"\nUpdated DNS records, final count of unique IP addresses: {len(filtered_ips)}")
 
 if __name__ == "__main__":
-    name_to_delete = "my-telegram-is-herocore"  # 设置要删除的 DNS 记录的名称
+    name = "@"  # 如果 name 为 "@"，则删除所有 DNS 记录；否则，只删除指定名称的 DNS 记录。
     dns_domains = os.environ.get("DOMAINS", "").split(",")
     zone_id = os.environ.get("CLOUDFLARE_ZONE_ID")
     api_key = os.environ.get("CLOUDFLARE_API_TOKEN")
@@ -67,4 +61,4 @@ if __name__ == "__main__":
 
     headers = {"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"}
 
-    update_dns_records(zone_id, name_to_delete, dns_domains, headers, excluded_networks)
+    update_dns_records(zone_id, name, dns_domains, headers, excluded_networks)
