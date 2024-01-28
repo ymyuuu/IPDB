@@ -48,7 +48,8 @@ for dns_domain in dns_domains:
 
     for record in data["result"]:
         record_name = record["name"]
-        if re.search(name, record_name):
+        # if re.search(name, record_name):
+        if re.search("onecf", record_name):
             delete_dns_record(record["id"])
 
 # Print the total number of unique IPs
