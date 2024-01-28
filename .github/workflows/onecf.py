@@ -17,11 +17,11 @@ def get_a_records(domain):
         return []
 
 def delete_dns_record(zone_id, record_id, headers):
-    requests.delete(f"https://proxy.api.030101.xyz/https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records/{record_id}", headers=headers)
+    requests.delete(f"https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records/{record_id}", headers=headers)
 
 def create_dns_record(zone_id, name, ip, headers):
     create_data = {"type": "A", "name": name, "content": ip, "ttl": 60, "proxied": False}
-    requests.post(f"https://proxy.api.030101.xyz/https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records", headers=headers, json=create_data)
+    requests.post(f"https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records", headers=headers, json=create_data)
 
 def update_dns_records(zone_id, name, dns_domains, headers, excluded_networks):
     unique_ips = set()
@@ -30,7 +30,7 @@ def update_dns_records(zone_id, name, dns_domains, headers, excluded_networks):
         new_ip_list = get_a_records(dns_domain)
         unique_ips.update(new_ip_list)
 
-        url = f"https://proxy.api.030101.xyz/https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records"
+        url = f"https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records"
         data = requests.get(url, headers=headers).json()
 
         for record in data.get("result", []):
