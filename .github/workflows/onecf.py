@@ -45,7 +45,7 @@ def update_dns_records(zone_id, name, dns_domains, headers, excluded_networks):
     print(f"\nUpdated DNS records, final count of unique IP addresses: {len(filtered_ips)}")
 
 if __name__ == "__main__":
-    name = "onecf"
+    name = "my-telegram-is-herocore"
     dns_domains = os.environ.get("DOMAINS", "").split(",")
     zone_id = os.environ.get("CLOUDFLARE_ZONE_ID")
     api_key = os.environ.get("CLOUDFLARE_API_TOKEN")
