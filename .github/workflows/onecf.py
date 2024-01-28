@@ -16,6 +16,14 @@ def get_a_records(domain):
         print(f"Request error: {e}")
         return []
 
+def delete_dns_records(zone_id, name, headers):
+    url = f"https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records"
+    data = requests.get(url, headers=headers).json()
+
+    for record in data.get("result", []):
+        if name == "@" or re.search(name, record.get("name", "")):
+            delete_dns_record(zone_id, record.get("id", ""), headers)
+
 def delete_dns_record(zone_id, record_id, headers):
     requests.delete(f"https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records/{record_id}", headers=headers)
 
@@ -30,23 +38,17 @@ def update_dns_records(zone_id, name, dns_domains, headers, excluded_networks):
         new_ip_list = get_a_records(dns_domain)
         unique_ips.update(new_ip_list)
 
-    url = f"https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records"
-    data = requests.get(url, headers=headers).json()
-
-    for record in data.get("result", []):
-        if name == "@" or re.search(name, record.get("name", "")):
-            delete_dns_record(zone_id, record.get("id", ""), headers)
+    delete_dns_records(zone_id, name, headers)
 
     filtered_ips = list(set(ip for ip in unique_ips if not any(ip_address(ip) in ip_network(net) for net in excluded_networks)))
 
     for ip in filtered_ips:
-        # 修改这行代码，确保传递的 name 参数被正确使用
         create_dns_record(zone_id, name, ip, headers)
 
     print(f"\nUpdated DNS records, final count of unique IP addresses: {len(filtered_ips)}")
 
 if __name__ == "__main__":
-    name = "my-telegram-is-herocore"
+    name_to_delete = "my-telegram-is-herocore"
     dns_domains = os.environ.get("DOMAINS", "").split(",")
     zone_id = os.environ.get("CLOUDFLARE_ZONE_ID")
     api_key = os.environ.get("CLOUDFLARE_API_TOKEN")
@@ -56,4 +58,4 @@ if __name__ == "__main__":
 
     headers = {"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"}
 
-    update_dns_records(zone_id, name, dns_domains, headers, excluded_networks)
+    update_dns_records(zone_id, name_to_delete, dns_domains, headers, excluded_networks)
