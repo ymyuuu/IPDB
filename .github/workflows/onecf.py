@@ -1,61 +1,30 @@
 import os
 import requests
 import re
-import ipaddress  # 导入 ipaddress 模块
+from ipaddress import ip_address, ip_network
 
-# Fetch secrets from environment variables
-dns_api_url = os.environ.get("DNSAPI")
-dns_domains = os.environ.get("DOMAINS", "").split(",")
-api_token = os.environ.get("ONECF_CLOUDFLARE_API_TOKEN")
-zone_id = os.environ.get("ONECF_CLOUDFLARE_ZONE_ID")
-name = "@"  # 设置 name 为 "@"
-
-headers = {
-    "Authorization": f"Bearer {api_token}",
-    "Content-Type": "application/json",
-}
-
-# 定义要排除的 IP 地址段列表
-excluded_ip_ranges = [
-    "173.245.48.0/20",
-    "103.21.244.0/22",
-    "103.22.200.0/22",
-    "103.31.4.0/22",
-    "141.101.64.0/18",
-    "108.162.192.0/18",
-    "190.93.240.0/20",
-    "188.114.96.0/20",
-    "197.234.240.0/22",
-    "198.41.128.0/17",
-    "162.158.0.0/15",
-    "104.16.0.0/13",
-    "104.24.0.0/14",
-    "172.64.0.0/13",
-    "131.0.72.0/22",
-]
-
-def get_a_records(dns_domain):
+def get_a_records(domain):
+    api_url = f'https://dns.google/resolve?name={domain}&type=A'
     try:
-        response = requests.get(f"{dns_api_url}/us01/{dns_domain}/a")
-        data = response.json().get("answer", [])
+        response = requests.get(api_url)
+        response.raise_for_status()
+        
+        json_data = response.json()
 
-        # 过滤掉排除的 IP 地址段
-        valid_records = [
-            record["rdata"] for record in data
-            if record.get("type") == "A" and not any(ipaddress.ip_address(record["rdata"]) in ipaddress.ip_network(excluded_range) for excluded_range in excluded_ip_ranges)
-        ]
-
-        return valid_records
+        if json_data.get('Status') == 0 and 'Answer' in json_data:
+            return list(set(entry['data'] for entry in json_data['Answer'] if entry['type'] == 1))
+        else:
+            return []
 
     except requests.exceptions.RequestException as e:
-        print(f"请求发生错误: {e}")
+        print(f"请求错误: {e}")
         return []
 
-def delete_dns_record(record_id):
+def delete_dns_record(zone_id, record_id, headers):
     delete_url = f"https://proxy.api.030101.xyz/https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records/{record_id}"
     requests.delete(delete_url, headers=headers)
 
-def create_dns_record(ip):
+def create_dns_record(zone_id, name, ip, headers):
     create_url = f"https://proxy.api.030101.xyz/https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records"
     create_data = {
         "type": "A",
@@ -66,27 +35,46 @@ def create_dns_record(ip):
     }
     requests.post(create_url, headers=headers, json=create_data)
 
-unique_ips = set()
+def update_dns_records(zone_id, name, dns_domains, headers, excluded_networks):
+    unique_ips = set()
 
-for dns_domain in dns_domains:
-    new_ip_list = get_a_records(dns_domain)
-    unique_ips.update(new_ip_list)
+    for dns_domain in dns_domains:
+        new_ip_list = get_a_records(dns_domain)
+        unique_ips.update(new_ip_list)
 
-    url = f"https://proxy.api.030101.xyz/https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records"
-    response = requests.get(url, headers=headers)
-    data = response.json()
+        url = f"https://proxy.api.030101.xyz/https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records"
+        response = requests.get(url, headers=headers)
+        data = response.json()
 
-    for record in data["result"]:
-        record_name = record["name"]
-        if name == "@" or re.search(name, record_name):
-            delete_dns_record(record["id"])
+        for record in data["result"]:
+            record_name = record["name"]
+            if name == "@" or re.search(name, record_name):
+                delete_dns_record(zone_id, record["id"], headers)
 
-# Print the total number of unique IPs
-print(f"\nTotal IPs: {len(unique_ips)}")
+    filtered_ips = [ip for ip in unique_ips if not any(ip_address(ip) in ip_network(net) for net in excluded_networks)]
 
-print(f"\nSuccessfully delete records with name {name}, updating DNS records now")
+    for ip in filtered_ips:
+        create_dns_record(zone_id, name, ip, headers)
 
-for new_ip in unique_ips:
-    create_dns_record(new_ip)
+    print(f"已更新 DNS 记录，最终的 IP 地址数量: {len(filtered_ips)}")
+    
+    # 显示已删除全部 DNS 记录
+    response_after_delete = requests.get(url, headers=headers)
+    data_after_delete = response_after_delete.json()
+    if not data_after_delete["result"]:
+        print("已删除全部 DNS 记录")
 
-print(f"\nSuccessfully update {name} DNS records with unique IP addresses")
+if __name__ == "__main__":
+    name = "@"  # 替换成你的 DNS 记录名称
+    zone_id = os.environ.get("ONECF_CLOUDFLARE_ZONE_ID")  # 替换成你的 Cloudflare Zone ID
+    dns_domains = os.environ.get("DOMAINS", "").split(",")  # 替换成你的 DNS 域名列表，用逗号分隔
+    api_key = os.environ.get("ONECF_CLOUDFLARE_API_TOKEN")  # 替换成你的 Cloudflare API Key
+    excluded_networks = ["173.245.48.0/20", "103.21.244.0/22", "103.22.200.0/22", "103.31.4.0/22", "141.101.64.0/18",
+                         "108.162.192.0/18", "190.93.240.0/20", "188.114.96.0/20", "197.234.240.0/22", "198.41.128.0/17",
+                         "162.158.0.0/15", "104.16.0.0/13", "104.24.0.0/14", "172.64.0.0/13", "131.0.72.0/22"]
+    headers = {
+        "Authorization": f"Bearer {api_key}",
+        "Content-Type": "application/json",
+    }
+
+    update_dns_records(zone_id, name, dns_domains, headers, excluded_networks)
