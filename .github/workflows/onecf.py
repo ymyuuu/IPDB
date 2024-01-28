@@ -1,6 +1,7 @@
 import os
 import requests
 import re
+import ipaddress  # 导入 ipaddress 模块
 
 # Fetch secrets from environment variables
 dns_api_url = os.environ.get("DNSAPI")
@@ -14,9 +15,38 @@ headers = {
     "Content-Type": "application/json",
 }
 
+# 定义要排除的 IP 地址段列表
+excluded_ip_ranges = [
+    "173.245.48.0/20",
+    "103.21.244.0/22",
+    "103.22.200.0/22",
+    "103.31.4.0/22",
+    "141.101.64.0/18",
+    "108.162.192.0/18",
+    "190.93.240.0/20",
+    "188.114.96.0/20",
+    "197.234.240.0/22",
+    "198.41.128.0/17",
+    "162.158.0.0/15",
+    "104.16.0.0/13",
+    "104.24.0.0/14",
+    "172.64.0.0/13",
+    "131.0.72.0/22",
+]
+
 def get_a_records(dns_domain):
     try:
-        return [record["rdata"] for record in requests.get(f"{dns_api_url}/us01/{dns_domain}/a").json().get("answer", []) if record.get("type") == "A"]
+        response = requests.get(f"{dns_api_url}/us01/{dns_domain}/a")
+        data = response.json().get("answer", [])
+
+        # 过滤掉排除的 IP 地址段
+        valid_records = [
+            record["rdata"] for record in data
+            if record.get("type") == "A" and not any(ipaddress.ip_address(record["rdata"]) in ipaddress.ip_network(excluded_range) for excluded_range in excluded_ip_ranges)
+        ]
+
+        return valid_records
+
     except requests.exceptions.RequestException as e:
         print(f"请求发生错误: {e}")
         return []
