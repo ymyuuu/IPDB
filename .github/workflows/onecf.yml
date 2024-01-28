@@ -1,9 +1,9 @@
-name: ONECF
+name: My Telegram is Herocore
 
 on:
-  push:
-    branches:
-      - main
+  # push:
+  #   branches:
+  #     - main
   schedule:
     - cron: '*/10 * * * *'
 
@@ -25,7 +25,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install requests
 
-    - name: ONECF
+    - name: My Telegram is Herocore
       run: |
         python .github/workflows/onecf.py
       env:
