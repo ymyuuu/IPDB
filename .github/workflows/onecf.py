@@ -42,7 +42,7 @@ def update_dns_records(zone_id, name, dns_domains, headers, excluded_networks):
     for ip in filtered_ips:
         create_dns_record(zone_id, name, ip, headers)
 
-    print(f"/nUpdated DNS records, final count of unique IP addresses: {len(filtered_ips)}")
+    print(f"\nUpdated DNS records, final count of unique IP addresses: {len(filtered_ips)}")
 
 if __name__ == "__main__":
     name = "@"
