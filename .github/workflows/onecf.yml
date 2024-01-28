@@ -29,6 +29,7 @@ jobs:
       run: |
         python .github/workflows/onecf.py
       env:
-        ONECF: ${{ secrets.ONECFIPS }}
-        CLOUDFLARE_API_TOKEN: ${{ secrets.ONECF_CLOUDFLARE_API_TOKEN }}
-        CLOUDFLARE_ZONE_ID: ${{ secrets.ONECF_CLOUDFLARE_ZONE_ID }}
+        DNSAPI: ${{ secrets.DNSAPI }}
+        DOMAINS: ${{ secrets.DOMAINS }}
+        ONECF_CLOUDFLARE_API_TOKEN: ${{ secrets.ONECF_CLOUDFLARE_API_TOKEN }}
+        ONECF_CLOUDFLARE_ZONE_ID: ${{ secrets.ONECF_CLOUDFLARE_ZONE_ID }}
