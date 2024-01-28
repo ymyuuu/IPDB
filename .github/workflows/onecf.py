@@ -2,49 +2,56 @@ import os
 import requests
 import re
 from ipaddress import ip_address, ip_network
+from concurrent.futures import ThreadPoolExecutor
 
 def get_a_records(domain):
     try:
         response = requests.get(f'https://dns.google/resolve?name={domain}&type=A')
         response.raise_for_status()
+        
         json_data = response.json()
+
         return list(set(entry['data'] for entry in json_data.get('Answer', []) if entry.get('type') == 1))
 
     except requests.exceptions.RequestException as e:
-        print(f"Request error: {e}")
+        print(f"请求错误: {e}")
         return []
 
 def delete_dns_record(zone_id, record_id, headers):
-    requests.delete(f"https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records/{record_id}", headers=headers)
+    requests.delete(f"https://proxy.api.030101.xyz/https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records/{record_id}", headers=headers)
 
 def create_dns_record(zone_id, name, ip, headers):
     create_data = {"type": "A", "name": name, "content": ip, "ttl": 60, "proxied": False}
-    requests.post(f"https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records", headers=headers, json=create_data)
+    requests.post(f"https://proxy.api.030101.xyz/https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records", headers=headers, json=create_data)
+
+def update_dns_records_for_domain(zone_id, name, dns_domain, headers, excluded_networks):
+    new_ip_list = get_a_records(dns_domain)
+    unique_ips.update(new_ip_list)
+
+    url = f"https://proxy.api.030101.xyz/https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records"
+    data = requests.get(url, headers=headers).json()
+
+    for record in data.get("result", []):
+        if name == "@" or re.search(name, record.get("name", "")):
+            delete_dns_record(zone_id, record.get("id", ""), headers)
 
 def update_dns_records(zone_id, name, dns_domains, headers, excluded_networks):
+    global unique_ips
     unique_ips = set()
 
-    for dns_domain in dns_domains:
-        new_ip_list = get_a_records(dns_domain)
-        unique_ips.update(new_ip_list)
-
-        url = f"https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records"
-        data = requests.get(url, headers=headers).json()
-
-        for record in data.get("result", []):
-            if name == "@" or re.search(name, record.get("name", "")):
-                delete_dns_record(zone_id, record.get("id", ""), headers)
+    with ThreadPoolExecutor(max_workers=10) as executor:
+        executor.map(lambda domain: update_dns_records_for_domain(zone_id, name, domain, headers, excluded_networks), dns_domains)
 
     filtered_ips = list(set(ip for ip in unique_ips if not any(ip_address(ip) in ip_network(net) for net in excluded_networks)))
 
     for ip in filtered_ips:
         create_dns_record(zone_id, name, ip, headers)
 
-    print(f"Updated DNS records, final count of unique IP addresses: {len(filtered_ips)}")
+    print(f"已更新 DNS 记录，最终的 IP 地址数量: {len(filtered_ips)}")
 
 if __name__ == "__main__":
-    name = "@"
     zone_id = os.environ.get("ONECF_CLOUDFLARE_ZONE_ID")
+    name = "@"
     dns_domains = os.environ.get("DOMAINS", "").split(",")
     api_key = os.environ.get("ONECF_CLOUDFLARE_API_TOKEN")
     excluded_networks = ["173.245.48.0/20", "103.21.244.0/22", "103.22.200.0/22", "103.31.4.0/22", "141.101.64.0/18",
