@@ -42,12 +42,12 @@ def update_dns_records(zone_id, name, dns_domains, headers, excluded_networks):
     for ip in filtered_ips:
         create_dns_record(zone_id, name, ip, headers)
 
-    print(f"Updated DNS records, final count of unique IP addresses: {len(filtered_ips)}")
+    print(f"/nUpdated DNS records, final count of unique IP addresses: {len(filtered_ips)}")
 
 if __name__ == "__main__":
-    zone_id = os.environ.get("ONECF_CLOUDFLARE_ZONE_ID")
-    name = "your_record_name"
+    name = "@"
     dns_domains = os.environ.get("DOMAINS", "").split(",")
+    zone_id = os.environ.get("ONECF_CLOUDFLARE_ZONE_ID")
     api_key = os.environ.get("ONECF_CLOUDFLARE_API_TOKEN")
     excluded_networks = ["173.245.48.0/20", "103.21.244.0/22", "103.22.200.0/22", "103.31.4.0/22", "141.101.64.0/18",
                          "108.162.192.0/18", "190.93.240.0/20", "188.114.96.0/20", "197.234.240.0/22", "198.41.128.0/17",
