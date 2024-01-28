@@ -7,7 +7,7 @@ dns_api_url = os.environ.get("DNSAPI")
 dns_domains = os.environ.get("DOMAINS", "").split(",")
 api_token = os.environ.get("ONECF_CLOUDFLARE_API_TOKEN")
 zone_id = os.environ.get("ONECF_CLOUDFLARE_ZONE_ID")
-name = "@"
+name = "@"  # 设置 name 为 "@"
 
 headers = {
     "Authorization": f"Bearer {api_token}",
@@ -48,8 +48,7 @@ for dns_domain in dns_domains:
 
     for record in data["result"]:
         record_name = record["name"]
-        # if re.search(name, record_name):
-        if re.search("onecf", record_name):
+        if name == "@" or re.search(name, record_name):
             delete_dns_record(record["id"])
 
 # Print the total number of unique IPs
