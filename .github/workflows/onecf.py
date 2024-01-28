@@ -30,12 +30,12 @@ def update_dns_records(zone_id, name, dns_domains, headers, excluded_networks):
         new_ip_list = get_a_records(dns_domain)
         unique_ips.update(new_ip_list)
 
-        url = f"https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records"
-        data = requests.get(url, headers=headers).json()
+    url = f"https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records"
+    data = requests.get(url, headers=headers).json()
 
-        for record in data.get("result", []):
-            if name == "@" or re.search(name, record.get("name", "")):
-                delete_dns_record(zone_id, record.get("id", ""), headers)
+    for record in data.get("result", []):
+        if name == "@" or re.search(name, record.get("name", "")):
+            delete_dns_record(zone_id, record.get("id", ""), headers)
 
     filtered_ips = list(set(ip for ip in unique_ips if not any(ip_address(ip) in ip_network(net) for net in excluded_networks)))
 
