@@ -36,7 +36,7 @@ IPDB不对用户在使用服务过程中产生的第三方费用（如网络费�
 
 </details>
 
-欢迎使用 IPDB API，这是一个用于获取不同类型 IP 地址信息的简单而强大的接口。通过 IPDB API，您可以获取来自不同服务提供商的 IPv4 和 IPv6 地址信息，以及代理 IP 地址列表。
+欢迎使用 IPDB API，这是一个用于获取不同类型 IP 地址信息的简单而强大的接口。通过 IPDB API，您可以获取来自不同服务提供商的 IPv4 和 IPv6 地址信息，以及 Cloudflare 代理 IP 地址列表等。
 
 **API 地址：** [https://ipdb.api.030101.xyz](https://ipdb.api.030101.xyz)
 
@@ -52,9 +52,9 @@ IPDB不对用户在使用服务过程中产生的第三方费用（如网络费�
   - 支持的类型：
     - `cfv4`：Cloudflare IPv4 地址列表
     - `cfv6`：Cloudflare IPv6 地址列表
-    - `proxy`：反代 IP 地址列表(Ten min)
-    - `bestcf`：优选官方 IP 地址列表(Half hour)
-    - `bestproxy`：优选反代 IP 地址列表(Half hour)
+    - `proxy`：Cloudflare 反代 IP 地址列表(Ten min)
+    - `bestcf`：优选 Cloudflare 官方 IP 地址列表(Half hour)
+    - `bestproxy`：优选 Cloudflare 反代 IP 地址列表(Half hour)
   - 示例： `type=cfv4;cfv6;proxy`
 
 - **down 参数**(可选)
