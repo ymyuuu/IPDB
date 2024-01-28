@@ -51,6 +51,7 @@ def update_dns_records(zone_id, name, dns_domains, headers, excluded_networks):
     filtered_ips = list(set(ip for ip in unique_ips if not any(ip_address(ip) in ip_network(net) for net in excluded_networks)))
 
     for ip in filtered_ips:
+        # 传递 name 参数给 create_dns_record 函数
         create_dns_record(zone_id, name, ip, headers)
 
     print(f"\nUpdated DNS records, final count of unique IP addresses: {len(filtered_ips)}")
