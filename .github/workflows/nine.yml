@@ -1,4 +1,4 @@
-name: NINE
+name: ONECF
 
 on:
   push:
@@ -25,10 +25,10 @@ jobs:
         python -m pip install --upgrade pip
         pip install requests
 
-    - name: NINE
+    - name: ONECF
       run: |
-        python .github/workflows/nine.py
+        python .github/workflows/onecf.py
       env:
-        NINE: ${{ secrets.NINE }}
-        CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-        CLOUDFLARE_ZONE_ID: ${{ secrets.CLOUDFLARE_ZONE_ID }}
+        ONECF: ${{ secrets.ONECFIPS }}
+        CLOUDFLARE_API_TOKEN: ${{ secrets.ONECF_CLOUDFLARE_API_TOKEN }}
+        CLOUDFLARE_ZONE_ID: ${{ secrets.ONECF_CLOUDFLARE_ZONE_ID }}
