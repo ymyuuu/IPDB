@@ -17,11 +17,19 @@ def get_a_records(domain):
         return []
 
 def delete_dns_records(zone_id, name, headers):
-    url = f"https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records"
-    data = requests.get(url, headers=headers).json()
+    if name == "@":
+        # 如果 name 为 "@"，则删除所有 DNS 记录
+        url = f"https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records"
+        data = requests.get(url, headers=headers).json()
 
-    for record in data.get("result", []):
-        if name == "@" or re.search(name, record.get("name", "")):
+        for record in data.get("result", []):
+            delete_dns_record(zone_id, record.get("id", ""), headers)
+    else:
+        # 如果 name 不为 "@"，则只删除特定名称的 DNS 记录
+        url = f"https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records?type=A&name={name}"
+        data = requests.get(url, headers=headers).json()
+
+        for record in data.get("result", []):
             delete_dns_record(zone_id, record.get("id", ""), headers)
 
 def delete_dns_record(zone_id, record_id, headers):
@@ -48,7 +56,7 @@ def update_dns_records(zone_id, name, dns_domains, headers, excluded_networks):
     print(f"\nUpdated DNS records, final count of unique IP addresses: {len(filtered_ips)}")
 
 if __name__ == "__main__":
-    name_to_delete = "my-telegram-is-herocore"
+    name_to_delete = "@"  # 设置要删除的 DNS 记录的名称
     dns_domains = os.environ.get("DOMAINS", "").split(",")
     zone_id = os.environ.get("CLOUDFLARE_ZONE_ID")
     api_key = os.environ.get("CLOUDFLARE_API_TOKEN")
