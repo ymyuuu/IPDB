@@ -7,7 +7,7 @@ dns_api_url = os.environ.get("DNSAPI")
 dns_domains = os.environ.get("DOMAINS", "").split(",")
 api_token = os.environ.get("ONECF_CLOUDFLARE_API_TOKEN")
 zone_id = os.environ.get("ONECF_CLOUDFLARE_ZONE_ID")
-name = "nine"
+name = "@"
 
 headers = {
     "Authorization": f"Bearer {api_token}",
