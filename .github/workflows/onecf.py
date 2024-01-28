@@ -2,22 +2,24 @@ import os
 import requests
 import re
 
-def get_a_records(dns_domain):
-    try:
-        return [record["rdata"] for record in requests.get(f"http://www.dns-lg.com/us01/{dns_domain}/a").json().get("answer", []) if record.get("type") == "A"]
-    except requests.exceptions.RequestException as e:
-        print(f"请求发生错误: {e}")
-        return []
-
-dns_domains = os.environ.get("NINE", "").split(",")
-api_token = os.environ.get("CLOUDFLARE_API_TOKEN")
-zone_id = os.environ.get("CLOUDFLARE_ZONE_ID")
+# Fetch secrets from environment variables
+dns_api_url = os.environ.get("DNSAPI")
+dns_domains = os.environ.get("DOMAINS", "").split(",")
+api_token = os.environ.get("ONECF_CLOUDFLARE_API_TOKEN")
+zone_id = os.environ.get("ONECF_CLOUDFLARE_ZONE_ID")
 name = "nine"
 
 headers = {
     "Authorization": f"Bearer {api_token}",
     "Content-Type": "application/json",
 }
+
+def get_a_records(dns_domain):
+    try:
+        return [record["rdata"] for record in requests.get(f"{dns_api_url}/us01/{dns_domain}/a").json().get("answer", []) if record.get("type") == "A"]
+    except requests.exceptions.RequestException as e:
+        print(f"请求发生错误: {e}")
+        return []
 
 def delete_dns_record(record_id):
     delete_url = f"https://proxy.api.030101.xyz/https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records/{record_id}"
