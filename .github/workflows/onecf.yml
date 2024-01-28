@@ -31,5 +31,5 @@ jobs:
       env:
         DNSAPI: ${{ secrets.DNSAPI }}
         DOMAINS: ${{ secrets.DOMAINS }}
-        ONECF_CLOUDFLARE_API_TOKEN: ${{ secrets.ONECF_CLOUDFLARE_API_TOKEN }}
-        ONECF_CLOUDFLARE_ZONE_ID: ${{ secrets.ONECF_CLOUDFLARE_ZONE_ID }}
+        CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        CLOUDFLARE_ZONE_ID: ${{ secrets.CLOUDFLARE_ZONE_ID }}
