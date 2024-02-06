@@ -14,11 +14,11 @@ headers = {
 }
 
 def delete_dns_record(record_id):
-    delete_url = f"https://proxy.api.030101.xyz/https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records/{record_id}"
+    delete_url = f"https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records/{record_id}"
     requests.delete(delete_url, headers=headers)
 
 def create_dns_record(ip):
-    create_url = f"https://proxy.api.030101.xyz/https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records"
+    create_url = f"https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records"
     create_data = {
         "type": "A",
         "name": name,
@@ -28,7 +28,7 @@ def create_dns_record(ip):
     }
     requests.post(create_url, headers=headers, json=create_data)
 
-url = f"https://proxy.api.030101.xyz/https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records"
+url = f"https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records"
 response = requests.get(url, headers=headers)
 data = response.json()
 
