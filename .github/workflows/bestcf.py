@@ -45,4 +45,4 @@ new_ip_list = ipdb_response.text.strip().split("\n")
 for new_ip in new_ip_list:
     create_dns_record(new_ip)
 
-print(f"\nSuccessfully update {name} DNS records")
+print(f"Successfully update {name} DNS records")
