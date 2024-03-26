@@ -40,16 +40,27 @@ def create_dns_record(zone_id, name, ip, headers):
     create_data = {"type": "A", "name": name, "content": ip, "ttl": 60, "proxied": False}
     requests.post(f"https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records", headers=headers, json=create_data)
 
-def update_dns_records(zone_id, name, dns_domains, headers, excluded_networks):
+def update_dns_records(zone_id, name, dns_domains, headers):
     unique_ips = set()
 
     for dns_domain in dns_domains:
         new_ip_list = get_a_records(dns_domain)
         unique_ips.update(new_ip_list)
 
-    delete_dns_records(zone_id, name, headers)
+    def filter_ip_addresses(ip_list):
+        excluded_networks = ["1.0.0.0/8", "10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16",
+                             "169.254.0.0/16", "100.64.0.0/10", "198.18.0.0/15", "192.0.0.0/24",
+                             "127.0.0.0/8", "240.0.0.0/4"]
 
-    filtered_ips = list(set(ip for ip in unique_ips if not any(ip_address(ip) in ip_network(net) for net in excluded_networks)))
+        filtered_ips = []
+        for ip in ip_list:
+            if not any(ip_address(ip) in ip_network(net) for net in excluded_networks):
+                filtered_ips.append(ip)
+        return filtered_ips
+
+    filtered_ips = filter_ip_addresses(unique_ips)
+
+    delete_dns_records(zone_id, name, headers)
 
     for ip in filtered_ips:
         create_dns_record(zone_id, name, ip, headers)
@@ -61,9 +72,7 @@ if __name__ == "__main__":
     dns_domains = os.environ.get("DOMAINS", "").split(",")
     zone_id = os.environ.get("CLOUDFLARE_ZONE_ID")
     api_key = os.environ.get("CLOUDFLARE_API_TOKEN")
-    excluded_networks = ["1.0.0.0/8", "10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16", "169.254.0.0/16", 
-                        "100.64.0.0/10", "198.18.0.0/15", "192.0.0.0/24", "127.0.0.0/8", "240.0.0.0/4"]
 
     headers = {"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"}
 
-    update_dns_records(zone_id, name, dns_domains, headers, excluded_networks)
+    update_dns_records(zone_id, name, dns_domains, headers)
