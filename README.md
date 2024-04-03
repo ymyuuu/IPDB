@@ -72,7 +72,7 @@ IPDB不对用户在使用服务过程中产生的第三方费用（如网络费�
 
 ### 请求示例
 
-- [https://ipdb.api.030101.xyz/?type=proxy&country=true](https://ipdb.api.030101.xyz/?type=proxy&country=true)
+- [https://ipdb.api.030101.xyz/?type=bestproxy&country=true](https://ipdb.api.030101.xyz/?type=bestproxy&country=true)
   - *获取优选反代 IP 地址列表并查看 IP 地区*
 
 - [https://ipdb.api.030101.xyz/?type=cfv4;proxy](https://ipdb.api.030101.xyz/?type=cfv4;proxy)
