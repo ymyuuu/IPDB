@@ -56,6 +56,12 @@ IPDB不对用户在使用服务过程中产生的第三方费用（如网络费�
     - `bestcf`：优选 Cloudflare 官方 IP 地址列表(Half hour)
     - `bestproxy`：优选 Cloudflare 反代 IP 地址列表(Half hour)
   - 示例： `type=cfv4;cfv6;proxy`
+ 
+- **country**(可选)
+  - 说明：是否显示 IP 地区。
+  - 取值：
+    - `true`：表示显示 IP 地区
+  - 示例： `country=true`
 
 - **down 参数**(可选)
   - 说明：是否下载获取的内容。
@@ -66,8 +72,8 @@ IPDB不对用户在使用服务过程中产生的第三方费用（如网络费�
 
 ### 请求示例
 
-- [https://ipdb.api.030101.xyz/?type=proxy](https://ipdb.api.030101.xyz/?type=proxy)
-  - *获取反代 IP 地址列表*
+- [https://ipdb.api.030101.xyz/?type=proxy&country=true](https://ipdb.api.030101.xyz/?type=proxy&country=true)
+  - *获取优选反代 IP 地址列表并查看 IP 地区*
 
 - [https://ipdb.api.030101.xyz/?type=cfv4;proxy](https://ipdb.api.030101.xyz/?type=cfv4;proxy)
   - *获取 Cloudflare IPv4 地址列表和反代 IP 地址列表*
