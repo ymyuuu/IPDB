@@ -1,0 +1,26 @@
+name: Reset DNS
+
+on:
+  schedule:
+    - cron: "40 20 * * *"
+
+jobs:
+  delete_dns_records:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: pip install aiohttp
+
+      - name: Run Python script
+        run: python .github/workflows/reset.py
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ZONE_ID: ${{ secrets.CLOUDFLARE_ZONE_ID }}
