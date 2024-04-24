@@ -1,9 +1,9 @@
 name: Reset DNS
 
 on:
-  push:
-    branches:
-      - main
+  # push:
+  #   branches:
+  #     - main
   schedule:
     - cron: "40 20 * * *"
 
