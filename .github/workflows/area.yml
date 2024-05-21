@@ -1,4 +1,4 @@
-name: Update Cloudflare DNS
+name: Area DNS
 
 on:
   push:
