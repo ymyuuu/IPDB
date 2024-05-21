@@ -2,7 +2,6 @@ import os
 import requests
 from collections import defaultdict
 
-
 # 从环境变量中读取Cloudflare的API相关信息
 ZONE_ID = os.environ.get('CLOUDFLARE_ZONE_ID')
 API_KEY = os.environ.get('CLOUDFLARE_API_TOKEN')
@@ -53,9 +52,8 @@ def delete_and_push_dns_records(country_code, ips):
         "name": f"{country_code}.{DOMAIN}"
     }
     response = requests.get(url, headers=headers, params=params)
-    data = response.json().get('result', [])
-    
-    for record in data:
+    data = response.json()
+    for record in data['result']:
         record_id = record['id']
         delete_dns_record(record_id)
 
