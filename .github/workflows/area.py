@@ -40,14 +40,6 @@ def get_country_ip_map(domains):
 
     return country_ip_map
 
-def delete_dns_record(record_id):
-    url = f"https://api.cloudflare.com/client/v4/zones/{ZONE_ID}/dns_records/{record_id}"
-    headers = {
-        "Authorization": f"Bearer {API_KEY}",
-        "Content-Type": "application/json"
-    }
-    requests.delete(url, headers=headers)
-
 def delete_and_push_dns_records(country_code, ips):
     url = f"https://api.cloudflare.com/client/v4/zones/{ZONE_ID}/dns_records"
     headers = {
@@ -60,25 +52,30 @@ def delete_and_push_dns_records(country_code, ips):
         "name": f"{country_code}.{DOMAIN}"
     }
     response = requests.get(url, headers=headers, params=params)
-    data = response.json()
+    data = response.json().get('result', [])
     
-    if 'result' in data:
-        for record in data['result']:
-            record_id = record['id']
-            delete_dns_record(record_id)
-        
-        for ip in ips:
-            data = {
-                "type": "A",
-                "name": f"{country_code}.{DOMAIN}",
-                "content": ip,
-                "ttl": 1,
-                "proxied": False
-            }
-            response = requests.post(url, headers=headers, json=data)
-        print(f"{country_code}: Updated {len(ips)} IPs")
-    else:
-        print("No result found in API response.")
+    for record in data:
+        record_id = record['id']
+        delete_dns_record(record_id)
+
+    for ip in ips:
+        data = {
+            "type": "A",
+            "name": f"{country_code}.{DOMAIN}",
+            "content": ip,
+            "ttl": 1,
+            "proxied": False
+        }
+        response = requests.post(url, headers=headers, json=data)
+    print(f"{country_code}: Updated {len(ips)} IPs")
+
+def delete_dns_record(record_id):
+    url = f"https://api.cloudflare.com/client/v4/zones/{ZONE_ID}/dns_records/{record_id}"
+    headers = {
+        "Authorization": f"Bearer {API_KEY}",
+        "Content-Type": "application/json"
+    }
+    requests.delete(url, headers=headers)
 
 domains = [
     "ipdb.rr.nu"
