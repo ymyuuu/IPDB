@@ -85,6 +85,8 @@ def delete_and_push_dns_records(country_code, ips):
         except requests.RequestException:
             pass  # 忽略错误
 
+    print(f"{country_code}: Updated {len(ips)} IPs")
+
 def delete_dns_record(record_id):
     url = f"https://api.cloudflare.com/client/v4/zones/{ZONE_ID}/dns_records/{record_id}"
     headers = {
