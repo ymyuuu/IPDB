@@ -56,4 +56,4 @@ def main():
         print("Please provide both CLOUDFLARE_API_TOKEN and CLOUDFLARE_ZONE_ID.")
 
 if __name__ == "__main__":
-    main()
+    main() 
