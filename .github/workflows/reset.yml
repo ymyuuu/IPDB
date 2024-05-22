@@ -1,4 +1,4 @@
-name: Reset Cloudflare DNS
+name: Reset DNS
 
 on:
   # push:
