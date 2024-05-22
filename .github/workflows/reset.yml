@@ -1,4 +1,4 @@
-name: Reset DNS
+name: Reset Cloudflare DNS
 
 on:
   push:
@@ -8,22 +8,25 @@ on:
     - cron: "40 20 * * *"
 
 jobs:
-  reset_dns:
+  reset:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+    - name: Checkout repository
+      uses: actions/checkout@v3
 
-      - name: Set up Python
-        uses: actions/setup-python@v3
-        with:
-          python-version: '3.x'
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.x'  # 使用 Python 3.x 版本
 
-      - name: Install dependencies
-        run: pip install aiohttp
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install requests
 
-      - name: Run Python script
-        run: python .github/workflows/reset.py
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ZONE_ID: ${{ secrets.CLOUDFLARE_ZONE_ID }}
+    - name: Run reset script
+      env:
+        CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        CLOUDFLARE_ZONE_ID: ${{ secrets.CLOUDFLARE_ZONE_ID }}
+      run: python .github/workflows/reset.py
