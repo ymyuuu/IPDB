@@ -1,6 +1,11 @@
 import os
 import requests
 from collections import defaultdict
+from concurrent.futures import ThreadPoolExecutor, as_completed
+import logging
+
+# 配置日志记录
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 # 从环境变量中读取Cloudflare的API相关信息
 ZONE_ID = os.environ.get('CLOUDFLARE_ZONE_ID')
@@ -14,20 +19,30 @@ def get_a_records(domain):
     return [record['data'] for record in data.get('Answer', []) if record.get('type') == 1]
 
 def batch_get_country_codes(ips):
-    for i in range(0, len(ips), 99):
-        batch_ips = ips[i:i+99]
-        url = "http://ip-api.com/batch"
-        payload = [{"query": ip} for ip in batch_ips]
-        response = requests.post(url, json=payload)
-        data = response.json()
-        for item in data:
-            ip = item['query']
-            country_code = item.get('countryCode', 'Unknown')
-            yield country_code
+    results = []
+    with ThreadPoolExecutor(max_workers=10) as executor:
+        futures = []
+        for i in range(0, len(ips), 99):
+            batch_ips = ips[i:i+99]
+            url = "http://ip-api.com/batch"
+            payload = [{"query": ip} for ip in batch_ips]
+            futures.append(executor.submit(requests.post, url, json=payload))
+        
+        for future in as_completed(futures):
+            try:
+                response = future.result()
+                data = response.json()
+                results.extend(data)
+            except Exception as e:
+                logging.error(f"Error fetching country codes: {e}")
+
+    for item in results:
+        ip = item['query']
+        country_code = item.get('countryCode', 'Unknown')
+        yield country_code
 
 def get_country_ip_map(domains):
     all_results = []
-
     for domain in domains:
         a_records = get_a_records(domain)
         unique_ips = list(set(a_records))
@@ -46,27 +61,37 @@ def delete_and_push_dns_records(country_code, ips):
         "Authorization": f"Bearer {API_KEY}",
         "Content-Type": "application/json"
     }
+    params = {"type": "A", "name": f"{country_code}.{DOMAIN}"}
 
-    params = {
-        "type": "A",
-        "name": f"{country_code}.{DOMAIN}"
-    }
-    response = requests.get(url, headers=headers, params=params)
-    data = response.json()
-    for record in data['result']:
-        record_id = record['id']
-        delete_dns_record(record_id)
+    try:
+        response = requests.get(url, headers=headers, params=params)
+        response.raise_for_status()
+        data = response.json()
+
+        if 'result' in data:
+            for record in data['result']:
+                record_id = record['id']
+                delete_dns_record(record_id)
+        else:
+            logging.warning(f"Unexpected response format for {country_code}: {data}")
+    except requests.RequestException as e:
+        logging.error(f"Error fetching DNS records for {country_code}: {e}")
 
     for ip in ips:
-        data = {
-            "type": "A",
-            "name": f"{country_code}.{DOMAIN}",
-            "content": ip,
-            "ttl": 1,
-            "proxied": False
-        }
-        response = requests.post(url, headers=headers, json=data)
-    print(f"{country_code}: Updated {len(ips)} IPs")
+        try:
+            data = {
+                "type": "A",
+                "name": f"{country_code}.{DOMAIN}",
+                "content": ip,
+                "ttl": 1,
+                "proxied": False
+            }
+            response = requests.post(url, headers=headers, json=data)
+            response.raise_for_status()
+        except requests.RequestException as e:
+            logging.error(f"Error creating DNS record for {ip}: {e}")
+
+    logging.info(f"{country_code}: Updated {len(ips)} IPs")
 
 def delete_dns_record(record_id):
     url = f"https://api.cloudflare.com/client/v4/zones/{ZONE_ID}/dns_records/{record_id}"
@@ -74,19 +99,26 @@ def delete_dns_record(record_id):
         "Authorization": f"Bearer {API_KEY}",
         "Content-Type": "application/json"
     }
-    requests.delete(url, headers=headers)
 
-domains = [
-    "ipdb.rr.nu"
-]
+    try:
+        response = requests.delete(url, headers=headers)
+        response.raise_for_status()
+    except requests.RequestException as e:
+        logging.error(f"Error deleting DNS record {record_id}: {e}")
 
-print("Scanning proxy IPs from various countries...")
+def main():
+    domains = ["ipdb.rr.nu"]
 
-country_ip_map = get_country_ip_map(domains)
+    logging.info("Scanning proxy IPs from various countries...")
 
-total_ips = sum(len(ips) for ips in country_ip_map.values())
-print(f"Scanned to {total_ips} IPs,Pushing DNS...")
+    country_ip_map = get_country_ip_map(domains)
 
-sorted_country_ip_map = sorted(country_ip_map.items(), key=lambda x: len(x[1]), reverse=True)
-for country_code, ips in sorted_country_ip_map:
-    delete_and_push_dns_records(country_code, ips)
+    total_ips = sum(len(ips) for ips in country_ip_map.values())
+    logging.info(f"Scanned {total_ips} IPs, Pushing DNS...")
+
+    sorted_country_ip_map = sorted(country_ip_map.items(), key=lambda x: len(x[1]), reverse=True)
+    for country_code, ips in sorted_country_ip_map:
+        delete_and_push_dns_records(country_code, ips)
+
+if __name__ == "__main__":
+    main()
