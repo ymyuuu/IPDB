@@ -3,19 +3,15 @@ import requests
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 def delete_all_a_records(api_token, zone_id):
-    a_records = get_a_records(api_token, zone_id)
-    if not a_records:
-        print("No A records found.")
-        return
+    while True:
+        a_records = get_a_records(api_token, zone_id)
+        if not a_records:
+            break
 
-    with ThreadPoolExecutor(max_workers=10) as executor:
-        futures = [executor.submit(delete_dns_record, api_token, zone_id, record['id']) for record in a_records]
-
-        for future in as_completed(futures):
-            try:
-                future.result()
-            except Exception as e:
-                print(f"Error deleting A record: {e}")
+        with ThreadPoolExecutor(max_workers=100) as executor:
+            futures = [executor.submit(delete_dns_record, api_token, zone_id, record['id']) for record in a_records]
+            for future in as_completed(futures):
+                future.result()  # This ensures that exceptions are raised if any
 
 def get_a_records(api_token, zone_id):
     url = f"https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records?type=A"
@@ -33,8 +29,7 @@ def get_a_records(api_token, zone_id):
             return data['result']
         else:
             return []
-    except requests.RequestException as e:
-        print(f"Error fetching A records: {e}")
+    except requests.RequestException:
         return []
 
 def delete_dns_record(api_token, zone_id, record_id):
@@ -48,8 +43,8 @@ def delete_dns_record(api_token, zone_id, record_id):
         response = requests.delete(url, headers=headers)
         response.raise_for_status()
         print(f"Deleted A record {record_id}")
-    except requests.RequestException as e:
-        raise Exception(f"Error deleting A record {record_id}: {e}")
+    except requests.RequestException:
+        pass  # Ignore errors
 
 def main():
     api_token = os.environ.get("CLOUDFLARE_API_TOKEN")
