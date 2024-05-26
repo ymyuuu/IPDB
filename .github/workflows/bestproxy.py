@@ -2,7 +2,7 @@ import os
 import requests
 import re
 
-# Get GitHub Secrets from environment variables
+# 获取环境变量
 api_token = os.environ.get("CLOUDFLARE_API_TOKEN")
 zone_id = os.environ.get("CLOUDFLARE_ZONE_ID")
 name = "bestproxy"
@@ -28,21 +28,32 @@ def create_dns_record(ip):
     }
     requests.post(create_url, headers=headers, json=create_data)
 
-url = f"https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records"
-response = requests.get(url, headers=headers)
-data = response.json()
+def get_dns_records():
+    url = f"https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records"
+    while True:
+        response = requests.get(url, headers=headers)
+        data = response.json()
+        if "result" in data:
+            return data["result"]
 
-for record in data["result"]:
+def get_new_ip_list():
+    while True:
+        response = requests.get(ipdb_api_url)
+        if response.status_code == 200:
+            return response.text.strip().split("\n")
+
+dns_records = get_dns_records()
+
+for record in dns_records:
     record_name = record["name"]
     if re.search(name, record_name):
         delete_dns_record(record["id"])
 
-print(f"\nSuccessfully delete records with name {name}, updating DNS records now")
+print(f"\nSuccessfully deleted records with name {name}, updating DNS records now")
 
-ipdb_response = requests.get(ipdb_api_url)
-new_ip_list = ipdb_response.text.strip().split("\n")
+new_ip_list = get_new_ip_list()
 
 for new_ip in new_ip_list:
     create_dns_record(new_ip)
 
-print(f"Successfully update {name} DNS records")
+print(f"Successfully updated {name} DNS records")
