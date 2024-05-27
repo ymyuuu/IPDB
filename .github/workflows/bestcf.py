@@ -25,7 +25,10 @@ def retry_request(url, headers, method="GET", data=None):
             raise ValueError("Unsupported method")
         
         if response.status_code == 200:  # 请求成功
-            return response.json() if method == "GET" else response
+            try:
+                return response.json() if method == "GET" else response
+            except ValueError:
+                return response.text  # 如果JSON解析失败，返回文本
         else:
             print(f"Request failed: {response.status_code} {response.text}")  # 打印错误信息
 
@@ -57,7 +60,11 @@ def get_dns_records():
 # 获取新IP列表的函数
 def get_new_ip_list():
     response = retry_request(ipdb_api_url, headers)
-    return response.strip().split("\n")
+    if isinstance(response, str):  # 如果返回的是文本
+        return response.strip().split("\n")
+    else:
+        print("Unexpected response format.")
+        return []
 
 # 获取现有DNS记录
 dns_records = get_dns_records()
