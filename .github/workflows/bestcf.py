@@ -17,53 +17,69 @@ headers = {
 # 通用的重试函数
 def retry_request(url, headers, method="GET", data=None):
     while True:  # 无限重试，直到成功获取数据
-        if method == "GET":
-            response = requests.get(url, headers=headers)
-        elif method == "POST":
-            response = requests.post(url, headers=headers, json=data)
-        else:
-            raise ValueError("Unsupported method")
-        
-        if response.status_code == 200:  # 请求成功
-            try:
-                return response.json() if method == "GET" else response
-            except ValueError:
-                return response.text  # 如果JSON解析失败，返回文本
-        else:
-            print(f"Request failed: {response.status_code} {response.text}")  # 打印错误信息
+        try:
+            if method == "GET":
+                response = requests.get(url, headers=headers)
+            elif method == "POST":
+                response = requests.post(url, headers=headers, json=data)
+            else:
+                raise ValueError("Unsupported method")
+            
+            if response.status_code == 200:  # 请求成功
+                return response.text  # 返回文本
+            else:
+                print(f"Request failed: {response.status_code} {response.text}")  # 打印错误信息
+        except requests.RequestException as e:
+            print(f"Request error: {e}")
 
 # 删除DNS记录的函数
 def delete_dns_record(record_id):
-    delete_url = f"https://proxy.api.030101.xyz/https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records/{record_id}"
-    requests.delete(delete_url, headers=headers)
+    try:
+        delete_url = f"https://proxy.api.030101.xyz/https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records/{record_id}"
+        response = requests.delete(delete_url, headers=headers)
+        if response.status_code != 200:
+            print(f"Failed to delete DNS record: {response.status_code} {response.text}")
+    except requests.RequestException as e:
+        print(f"Error deleting DNS record: {e}")
 
 # 创建DNS记录的函数
 def create_dns_record(ip):
-    create_url = f"https://proxy.api.030101.xyz/https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records"
-    create_data = {
-        "type": "A",  # 记录类型为A记录
-        "name": name,  # DNS记录名称
-        "content": ip,  # IP地址
-        "ttl": 60,  # TTL值为60秒
-        "proxied": False,  # 不使用Cloudflare代理
-    }
-    retry_request(create_url, headers, method="POST", data=create_data)
+    try:
+        create_url = f"https://proxy.api.030101.xyz/https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records"
+        create_data = {
+            "type": "A",  # 记录类型为A记录
+            "name": name,  # DNS记录名称
+            "content": ip,  # IP地址
+            "ttl": 60,  # TTL值为60秒
+            "proxied": False,  # 不使用Cloudflare代理
+        }
+        response = retry_request(create_url, headers, method="POST", data=create_data)
+        if not response:
+            print(f"Failed to create DNS record for IP: {ip}")
+    except requests.RequestException as e:
+        print(f"Error creating DNS record: {e}")
 
 # 获取现有DNS记录的函数
 def get_dns_records():
-    url = f"https://proxy.api.030101.xyz/https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records"
-    data = retry_request(url, headers)
-    if "result" in data:
-        return data["result"]
+    try:
+        url = f"https://proxy.api.030101.xyz/https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records"
+        response_text = retry_request(url, headers)
+        data = requests.get(url, headers=headers).json()
+        if "result" in data:
+            return data["result"]
+    except requests.RequestException as e:
+        print(f"Request error while getting DNS records: {e}")
+    except ValueError as e:
+        print(f"JSON decode error: {e}")
     return []
 
 # 获取新IP列表的函数
 def get_new_ip_list():
-    response = retry_request(ipdb_api_url, headers)
-    if isinstance(response, str):  # 如果返回的是文本
-        return response.strip().split("\n")
-    else:
-        print("Unexpected response format.")
+    try:
+        response = retry_request(ipdb_api_url, headers)
+        return response.strip().split("\n") if response else []
+    except Exception as e:
+        print(f"Error getting new IP list: {e}")
         return []
 
 # 获取现有DNS记录
