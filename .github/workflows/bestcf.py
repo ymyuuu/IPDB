@@ -52,7 +52,7 @@ def get_dns_records():
     data = retry_request(url, headers)
     if "result" in data:
         return data["result"]
-    return None
+    return []
 
 # 获取新IP列表的函数
 def get_new_ip_list():
@@ -62,14 +62,14 @@ def get_new_ip_list():
 # 获取现有DNS记录
 dns_records = get_dns_records()
 
-if dns_records is not None:
+if dns_records:
     for record in dns_records:
         record_name = record["name"]
         if re.search(name, record_name):  # 查找名称中包含指定字符串的记录
             delete_dns_record(record["id"])  # 删除匹配的DNS记录
     print(f"\nSuccessfully deleted records with name {name}, updating DNS records now")
 else:
-    print("Failed to retrieve DNS records. Exiting.")
+    print("No DNS records found with the specified name. Exiting.")
     exit(1)
 
 # 获取新的IP地址列表
