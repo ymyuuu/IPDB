@@ -31,12 +31,12 @@ def retry_request(url, headers, method="GET", data=None):
 
 # 删除DNS记录的函数
 def delete_dns_record(record_id):
-    delete_url = f"https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records/{record_id}"
+    delete_url = f"https://proxy.api.030101.xyz/https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records/{record_id}"
     requests.delete(delete_url, headers=headers)
 
 # 创建DNS记录的函数
 def create_dns_record(ip):
-    create_url = f"https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records"
+    create_url = f"https://proxy.api.030101.xyz/https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records"
     create_data = {
         "type": "A",  # 记录类型为A记录
         "name": name,  # DNS记录名称
@@ -48,7 +48,7 @@ def create_dns_record(ip):
 
 # 获取现有DNS记录的函数
 def get_dns_records():
-    url = f"https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records"
+    url = f"https://proxy.api.030101.xyz/https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records"
     data = retry_request(url, headers)
     if "result" in data:
         return data["result"]
