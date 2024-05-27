@@ -5,8 +5,8 @@ import re
 # 获取环境变量
 api_token = os.environ.get("CLOUDFLARE_API_TOKEN")
 zone_id = os.environ.get("CLOUDFLARE_ZONE_ID")
-name = "bestproxy"
-ipdb_api_url = "https://ipdb.api.030101.xyz/?type=bestproxy"
+name = "bestcf"
+ipdb_api_url = "https://ipdb.api.030101.xyz/?type=bestcf"
 
 headers = {
     "Authorization": f"Bearer {api_token}",
