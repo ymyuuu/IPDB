@@ -1,7 +1,8 @@
 import os
 import requests
+import re
 
-# 从环境变量获取GitHub Secrets
+# Get GitHub Secrets from environment variables
 api_token = os.environ.get("CLOUDFLARE_API_TOKEN")
 zone_id = os.environ.get("CLOUDFLARE_ZONE_ID")
 name = "bestcf"
@@ -38,23 +39,20 @@ def create_dns_record(ip):
         print(f"Exception occurred while creating DNS record for IP {ip}: {str(e)}")
 
 try:
-    # 获取现有的DNS记录
     url = f"https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records"
     response = requests.get(url, headers=headers)
     data = response.json()
 
-    # 遍历所有DNS记录，如果名称匹配则删除
     for record in data.get("result", []):
-        if record["name"] == f"{name}.{zone_id}":
+        record_name = record["name"]
+        if re.search(name, record_name):
             delete_dns_record(record["id"])
 
     print(f"Successfully deleted records with name {name}, updating DNS records now")
 
-    # 从IPDB API获取新的IP地址列表
     ipdb_response = requests.get(ipdb_api_url)
     new_ip_list = ipdb_response.text.strip().split("\n")
 
-    # 创建新的DNS记录
     for new_ip in new_ip_list:
         create_dns_record(new_ip)
 
