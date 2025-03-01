@@ -1,4 +1,4 @@
-name: 更新 DNS 记录
+name: 更新 UpBestIP
 
 on:
   push:
