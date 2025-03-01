@@ -1,20 +1,20 @@
-name: Update Proxy
+name: 更新 Proxy
 
 # 指定本工作流运行所需的权限
 permissions:
   contents: write
 
 on:
-  schedule:
-    # 每小时运行一次，你可根据需要调整 cron 表达式
-    - cron: "0 * * * *"
+  push:
+    branches:
+      - main
   workflow_dispatch:
 
 jobs:
-  update-proxy:
+  UpProxy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout 仓库代码
+      - name: 检出仓库代码
         uses: actions/checkout@v3
 
       - name: 设置 Node.js 环境
