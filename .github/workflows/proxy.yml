@@ -22,6 +22,6 @@ jobs:
         run: npm install axios adm-zip moment-timezone
 
       - name: 运行更新 Proxy 脚本
-        run: node updateProxy.js
+        run: node .github/workflows/updateProxy.js
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
