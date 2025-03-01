@@ -1,0 +1,27 @@
+name: Update Proxy
+
+on:
+  schedule:
+    # 每小时运行一次（可根据需要调整 cron 表达式）
+    - cron: "0 * * * *"
+  workflow_dispatch:
+
+jobs:
+  update-proxy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 仓库代码
+        uses: actions/checkout@v3
+
+      - name: 设置 Node.js 环境
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      - name: 安装依赖
+        run: npm install axios adm-zip moment-timezone
+
+      - name: 运行更新 Proxy 脚本
+        run: node updateProxy.js
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
