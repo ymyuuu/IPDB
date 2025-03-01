@@ -5,10 +5,9 @@ permissions:
   contents: write
 
 on:
-  push:
-    branches:
-      - main
-  workflow_dispatch:
+  schedule:
+    - cron: "*/10 * * * *"  # 每10分钟运行一次，cron表达式：每隔10分钟执行一次
+  workflow_dispatch:       # 支持手动触发
 
 jobs:
   UpProxy:
