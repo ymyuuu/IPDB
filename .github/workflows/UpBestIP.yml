@@ -1,0 +1,34 @@
+name: 更新 UpBestIP
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - "BestCF/bestcfv4.txt"      # 监听 BestCF/bestcf.txt 文件的更新
+      - "BestCF/bestcfv6.txt"      # 监听 BestCF/bestcf.txt 文件的更新
+      - "BestProxy/bestproxy.txt"  # 监听 BestProxy/bestproxy.txt 文件的更新
+  workflow_dispatch:             # 支持手动触发
+
+jobs:
+  UpBestIP:
+    runs-on: ubuntu-latest
+    steps:
+      # 检出仓库代码
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      # 设置 Python 环境
+      - name: 设置 Python 环境
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'  # 可根据需要指定 Python 版本，例如 3.8
+
+      # 安装依赖
+      - name: 安装依赖
+        run: pip install requests
+
+      # 运行更新 DNS 的 Python 脚本
+      - name: 更新 BestIP
+        run: python .github/workflows/UpBestIP.py
+        env:
+          CF_TOKENS: ${{ secrets.CF_TOKENS }}  # 从仓库 Secrets 中获取 CF_TOKENS 环境变量
