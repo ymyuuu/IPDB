@@ -1,6 +1,5 @@
 import os
 import requests
-import re
 
 # ------------------------- 配置区 -------------------------
 # 从环境变量中获取 Cloudflare API Token，可以是单个或多个（逗号分割）
@@ -10,8 +9,7 @@ if not cf_tokens_str:
 api_tokens = [token.strip() for token in cf_tokens_str.split(",") if token.strip()]
 
 # 子域名与对应的 IP 列表 URL 配置
-# 格式: "v4" 或 "v4@数量"，其中数量可以是数字或 "all"
-# 例如: "v4@10" 表示获取前 10 个 IP，"v6@all" 表示获取所有 IP
+# 如果只配置了 v4 则只处理 IPv4；如果同时配置了 v4 与 v6，则分别处理
 subdomain_configs = {
     "bestcf": {
         "v4": "https://raw.githubusercontent.com/ymyuuu/IPDB/refs/heads/main/BestCF/bestcfv4.txt",
@@ -21,8 +19,8 @@ subdomain_configs = {
         "v4": "https://raw.githubusercontent.com/ymyuuu/IPDB/refs/heads/main/BestProxy/bestproxy.txt"
     },
     "bestgc": {
-        "v4@10": "https://raw.githubusercontent.com/ymyuuu/IPDB/refs/heads/main/BestGC/bestgcv4.txt",
-        "v6@all": "https://raw.githubusercontent.com/ymyuuu/IPDB/refs/heads/main/BestGC/bestgcv6.txt"
+        "v4": "https://raw.githubusercontent.com/ymyuuu/IPDB/refs/heads/main/BestGC/bestgcv4.txt",
+        "v6": "https://raw.githubusercontent.com/ymyuuu/IPDB/refs/heads/main/BestGC/bestgcv6.txt"
     }
 }
 # -----------------------------------------------------------
@@ -33,37 +31,12 @@ dns_record_map = {
     "v6": "AAAA"
 }
 
-# 解析配置中的版本和数量，返回 (version_type, count)
-def parse_version_config(config_key: str) -> tuple:
-    # 使用正则表达式解析配置键
-    match = re.match(r"(v[46])(?:@(\d+|all))?$", config_key)
-    if not match:
-        raise ValueError(f"无效的配置键: {config_key}")
-    
-    version_type = match.group(1)  # v4 或 v6
-    count_str = match.group(2)      # 数量部分，可能为 None
-    
-    # 确定 IP 数量
-    if count_str is None:
-        count = 2  # 默认值为 2
-    elif count_str == "all":
-        count = None  # None 表示获取所有 IP
-    else:
-        count = int(count_str)
-    
-    return version_type, count
-
-# 获取指定 URL 的 IP 列表，可以指定返回的数量
-def fetch_ip_list(url: str, count: int = 2) -> list:
+# 获取指定 URL 的 IP 列表，仅返回前两行
+def fetch_ip_list(url: str) -> list:
     response = requests.get(url)  # 发送 GET 请求获取数据
     response.raise_for_status()   # 检查响应状态，若请求失败则抛出异常
     ip_lines = response.text.strip().split('\n')
-    
-    # 根据 count 确定返回多少行 IP
-    if count is None:
-        return ip_lines  # 返回所有 IP
-    else:
-        return ip_lines[:count]  # 返回指定数量的 IP
+    return ip_lines[:2]  # 只返回前两行
 
 # 获取 Cloudflare 第一个域区的信息，返回 (zone_id, domain)
 def fetch_zone_info(api_token: str) -> tuple:
@@ -129,35 +102,20 @@ def main():
             print(f"域区 ID: {zone_id} | 域名: {domain}")
             
             # 遍历所有子域名配置
-            for subdomain, version_configs in subdomain_configs.items():
-                # 针对每个版本配置分别处理
-                for config_key, url in version_configs.items():
-                    try:
-                        # 解析配置，获取版本类型和 IP 数量
-                        version_type, ip_count = parse_version_config(config_key)
-                        dns_type = dns_record_map.get(version_type)
-                        if not dns_type:
-                            print(f"警告: 未知的版本类型 {version_type}，跳过")
-                            continue
-                            
-                        # 获取 IP 列表
-                        ips = fetch_ip_list(url, ip_count)
-                        ip_count_text = "所有" if ip_count is None else ip_count
-                        print(f"获取 {subdomain} ({dns_type}) 前 {ip_count_text} 个 IP...")
-                        
-                        # 删除旧的 DNS 记录
-                        update_dns_record(token, zone_id, subdomain, domain, dns_type, "delete")
-                        
-                        # 添加新的 DNS 记录
-                        if ips:
-                            update_dns_record(token, zone_id, subdomain, domain, dns_type, "add", ips)
-                            print(f"{subdomain} ({dns_type}) 成功更新 {len(ips)} 个 IP")
-                        else:
-                            print(f"{subdomain} ({dns_type}) 未获取到 IP")
-                    except Exception as e:
-                        print(f"处理 {subdomain} {config_key} 时出错: {e}")
+            for subdomain, version_urls in subdomain_configs.items():
+                # 针对每个版本（如 v4、v6）分别处理
+                for version_key, url in version_urls.items():
+                    dns_type = dns_record_map.get(version_key)
+                    if not dns_type:
                         continue
-                        
+                    ips = fetch_ip_list(url)  # 获取 IP 列表（仅前两行）
+                    # 删除旧的 DNS 记录
+                    update_dns_record(token, zone_id, subdomain, domain, dns_type, "delete")
+                    # 添加新的 DNS 记录
+                    if ips:
+                        update_dns_record(token, zone_id, subdomain, domain, dns_type, "add", ips)
+                    else:
+                        print(f"{subdomain} ({dns_type}) 未获取到 IP")
             print(f"结束处理 API Token #{idx}")
             print("=" * 50 + "\n")
     except Exception as err:
