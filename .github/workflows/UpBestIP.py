@@ -143,7 +143,7 @@ subdomain_configs = {
     },
     "bestgc": {
         "v4@10": "https://raw.githubusercontent.com/ymyuuu/IPDB/refs/heads/main/BestGC/bestgcv4.txt",
-        "v6@all": "https://raw.githubusercontent.com/ymyuuu/IPDB/refs/heads/main/BestGC/bestgcv6.txt"
+        "v6@10": "https://raw.githubusercontent.com/ymyuuu/IPDB/refs/heads/main/BestGC/bestgcv6.txt"
     }
 }
 # -----------------------------------------------------------
