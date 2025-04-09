@@ -92,6 +92,6 @@ IPDB不对用户在使用服务过程中产生的第三方费用（如网络费�
 
 ## 赞助
 
-![image](https://support.nodeget.com/page/promotion?id=209)
+[![赞助图片](https://github.com/user-attachments/assets/e6bf7505-2383-44a7-9fb3-b593d8d1d492)](https://yxvm.com/)
 
 [NodeSupport](https://github.com/NodeSeekDev/NodeSupport)赞助了本项目
