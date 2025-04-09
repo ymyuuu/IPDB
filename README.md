@@ -89,3 +89,9 @@ IPDB不对用户在使用服务过程中产生的第三方费用（如网络费�
 本项目采用 MIT 许可证。详细信息请参阅 [LICENSE](https://github.com/ymyuuu/IPDB/blob/main/LICENSE) 文件。
 
 感谢你的使用！如果你对这个项目有任何改进或建议，也欢迎贡献代码或提出问题。
+
+## 赞助
+
+![image](https://support.nodeget.com/page/promotion?id=209)
+
+[NodeSupport](https://github.com/NodeSeekDev/NodeSupport)赞助了本项目
