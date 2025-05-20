@@ -1,15 +1,7 @@
 name: 更新 UpBestIP
 
 on:
-  push:
-    branches: [ main ]
-    paths:
-      - "BestCF/bestcfv4.txt"      # 监听 BestCF/bestcf.txt 文件的更新
-      - "BestCF/bestcfv6.txt"      # 监听 BestCF/bestcf.txt 文件的更新
-      - "BestProxy/bestproxy.txt"  # 监听 BestProxy/bestproxy.txt 文件的更新
-      - "BestGC/bestgcv4.txt"      # 监听 BestGC/bestgcv4.txt 文件的更新
-      - "BestGC/bestgcv6.txt"      # 监听 BestGC/bestgcv6.txt 文件的更新
-  workflow_dispatch:             # 支持手动触发
+  workflow_dispatch:  # 只支持手动触发
 
 jobs:
   UpBestIP:
