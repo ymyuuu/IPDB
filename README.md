@@ -90,8 +90,8 @@ IPDB不对用户在使用服务过程中产生的第三方费用（如网络费�
 
 感谢你的使用！如果你对这个项目有任何改进或建议，也欢迎贡献代码或提出问题。
 
-## 赞助
+## 感谢赞助方大力支持 🎉
 
-[![赞助图片](https://github.com/user-attachments/assets/b6afb15d-1916-4089-8751-af6fbb9feb7b)](https://yxvm.com/)
+[DigltaiVirt](https://digitalvirt.com/)
 
-[NodeSupport](https://github.com/NodeSeekDev/NodeSupport)赞助了本项目
+[YXVM](https://yxvm.com/) & [NodeSupport](https://github.com/NodeSeekDev/NodeSupport)
