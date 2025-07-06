@@ -22,8 +22,6 @@
 [![YXVM](https://img.shields.io/badge/YXVM-云服务-2196F3?logo=microsoft-azure&logoColor=white)](https://yxvm.com/)
 [![NodeSupport](https://img.shields.io/badge/NodeSupport-技术支持-FF9800?logo=node.js&logoColor=white)](https://github.com/NodeSeekDev/NodeSupport)
 
-[![Powered by DartNode](https://dartnode.com/branding/DN-Open-Source-sm.png)](https://dartnode.com "Powered by DartNode - Free VPS for Open Source")
-
 ---
 
 ## API 参数
