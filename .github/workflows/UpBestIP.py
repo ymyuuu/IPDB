@@ -24,7 +24,7 @@ subdomain_configs = {
      "bestcfv6": {
         "v6": "https://raw.githubusercontent.com/ymyuuu/IPDB/refs/heads/main/BestCF/bestcfv6.txt"
     },     
-     "bestaedg": {
+     "bestedg": {
         "v4": "https://raw.githubusercontent.com/ymyuuu/IPDB/refs/heads/main/BestEDG/bestedgv4.txt"
     },
     # "bestgc": {
