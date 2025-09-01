@@ -16,11 +16,14 @@
 [![Telegram](https://img.shields.io/badge/频道-HeroMsg-blue?logo=telegram&logoColor=white)](https://t.me/HeroMsg)
 [![Email](https://img.shields.io/badge/邮箱-联系我们-red?logo=gmail&logoColor=white)](mailto:admin@030101.xyz)
 
-**赞助商**
+## **赞助商**
 
+[![VPS.Town](https://img.shields.io/badge/VPS.Town-VPS托管-E91E63?logo=server&logoColor=white)](https://vps.town/)
 [![DigitalVirt](https://img.shields.io/badge/DigitalVirt-云服务-4CAF50?logo=digitalocean&logoColor=white)](https://digitalvirt.com/)
 [![YXVM](https://img.shields.io/badge/YXVM-云服务-2196F3?logo=microsoft-azure&logoColor=white)](https://yxvm.com/)
 [![NodeSupport](https://img.shields.io/badge/NodeSupport-技术支持-FF9800?logo=node.js&logoColor=white)](https://github.com/NodeSeekDev/NodeSupport)
+
+[![VPS.Town Logo](https://vps.town/static/images/sponsor.png)](https://vps.town/)
 
 ---
 
