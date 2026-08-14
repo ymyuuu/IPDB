@@ -101,4 +101,4 @@ https://ipdb.api.030101.xyz/?type=bestproxy&down=true
 
 ---
 
-[![Star History Chart](https://api.star-history.com/svg?repos=ymyuuu/IPDB&type=Date)](https://star-history.com/#ymyuuu/IPDB&Date)
+[![Star History Chart](https://star-history.dera.page/svg?repos=ymyuuu/IPDB&type=Date)](https://star-history.dera.page/#ymyuuu/IPDB&Date)
